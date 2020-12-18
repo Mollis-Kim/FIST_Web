@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+</head>
+<body>
+    <div class="tree-detail" th:fragment="detailfrag(treedetail)">
+        <th:block th:each="tree : ${treedetail}">
+            <table class="tb_tree">
+                <th><h3>Tree Detail</h3></th>
+                <tr>
+                    <td><b>tid</b></td> <td th:text="${tree.tid}"></td>
+                </tr>
+                <tr>
+                    <td><b>dist</b></td> <td th:text="${tree.dist}"></td>
+                </tr>
+                <tr>
+                    <td><b>dbh</b></td> <td th:text="${tree.dbh}"></td>
+                </tr>
+                <tr>
+                    <td><b>height</b></td> <td th:text="${tree.height}"></td>
+                </tr>
+                <tr>
+                    <td><b>latitude(위도)</b></td> <td th:text="${tree.latitude}"></td>
+                </tr>
+                <tr>
+                    <td><b>longitude(경도)</b></td> <td th:text="${tree.longitude}"></td>
+                </tr>
+                <tr>
+                    <td><b>조사자</b></td> <td th:text="${tree.pid}"></td>
+                </tr>
+            </table>
+        </th:block>
+    </div>
+</body>
+</html>

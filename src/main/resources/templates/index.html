@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Web Home</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+</head>
+<body>
+<div class="wrapper">
+
+    <!-- Sidebar -->
+    <nav id="sidebar">
+
+        <div class="sidebar-header"><h3>Web-Fist</h3></div>
+
+        <ul class="list-unstyled components">
+            <li><a th:href="@{'/webfist/map'}">Home</a></li>
+            <li class="active">
+                <a href="#treeSubmenu" data-toggle="collapse" aria-expanded="false">Tree List</a>
+                <ul class="collapse list-unstyled" id="treeSubmenu">
+                    <div class="tree-group" th:each="test : ${treeList}">
+                        <li><a th:href="@{'/webfist/map/'+${test.tid}}" th:text="${test.tid}"></a></li>
+                    </div>
+                </ul>
+            </li>
+            <li>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Others</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <li>
+                        <a href="#">Page 1</a>
+                    </li>
+                    <li>
+                        <a href="#">Page 2</a>
+                    </li>
+                    <li>
+                        <a href="#">Page 3</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="list-unstyled CTAs">
+            <li>
+                <a th:href="@{'/webfist/download'}" class="download">Download Excel(.xlsx)</a>
+            </li>
+
+        </ul>
+
+    </nav>
+    <script>
+        let treePosArray = new Array();
+    </script>
+    <!-- Page Content -->
+    <div id="content">
+        <!--  사이드바 버튼-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span>Toggle Sidebar</span>
+                </button>
+            </div>
+        </nav>
+
+        <div th:if="${detail != null}" th:include="/detail.html :: detailfrag(${detail})"></div>
+        <div th:unless="${detail != null}">
+            <table class="tb_tree">
+                <tr>
+                    <th>tid</th>
+                    <th>dist</th>
+                    <th>dbh</th>
+                    <th>height</th>
+                </tr>
+                <tr th:each="treel : ${treeList}">
+                    <td th:text="${treel.tid}"></td>
+                    <td th:text="${treel.dist}"></td>
+                    <td th:text="${treel.dbh}"></td>
+                    <td th:text="${treel.height}"></td>
+                    <script>
+                        name = "[[${treel.tid}]]";
+                        l1 = parseFloat("[[${treel.latitude}]]");
+                        l2 = parseFloat("[[${treel.longitude}]]");
+                        treePosArray.push([name,l1,l2]);
+                    </script>
+                </tr>
+            </table>
+        </div>
+        <!--   아래 div에서 지도 삽입    -->
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=88ff6c3b6ab905ccc189478337342538"></script>
+        <div id="map" style="width:800px;height:800px;"></div>
+<!--        <script th:src="@{/js/treeMap.js}" ></script>-->
+        <script type="text/javascript" src="/js/treeMap.js"></script>
+
+
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<!-- jQuery Custom Scroller CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar, #content').toggleClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    });
+</script>
+
+
+</body>
+</html>
