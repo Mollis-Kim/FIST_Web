@@ -9,65 +9,28 @@ import lombok.*;
 @NoArgsConstructor
 public class TreeDTO {
 
-    private String tid;
-    private String dist;
-    private String dbh;
-    private String height;
-    private String latitude;
-    private String longitude;
-    private String pid;
-    private String imgloc;
-    private String imgid;
+    private String tid; // 나무아이디
+    private String dist; // 거리
+    private String dbh; // 흉고직경
+    private String height;  // 수고
+    private String azimuth; //방위각
+    private String latitude; // 위도
+    private String longitude; // 경도
+    private String pid; // 조사자
+    private String imgPath; //실제 서버 DTO에서는 이미지패스추가
 
     public TreeEntity toEntity(){
         TreeEntity treeEntity = TreeEntity.builder()
                 .tid(tid)
                 .dist(dist)
                 .dbh(dbh)
+                .azimuth(azimuth)
                 .height(height)
                 .latitude(latitude)
                 .longitude(longitude)
                 .pid(pid)
-                .imgid(imgid)
-                .imgloc(imgloc)
+                .imgPath(imgPath)
                 .build();
         return treeEntity;
     }
-    @Builder
-    public TreeDTO(String tid, String dist, String dbh, String height,
-                   String longitude, String latitude){
-        this.tid = tid;
-        this.dist = dist;
-        this.dbh = dbh;
-        this.height = height;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.pid = "";
-        this.imgid = "";
-        this.imgloc = "";
-    }
-//    public TreeDTO(String tid, String dist, String dbh, String height,
-//                   String latitude, String longitude, String pid,
-//                   String imgid, String imgloc){
-//        this.tid = tid;
-//        this.dist = dist;
-//        this.dbh = dbh;
-//        this.height = height;
-//        this.longitude = longitude;
-//        this.latitude = latitude;
-//        this.pid = pid;
-//        this.imgid = imgid;
-//        this.imgloc = imgloc;
-//    }
-//    public TreeDTO(String tid, String dist, String dbh, String height){
-//        this.tid = tid;
-//        this.dist = dist;
-//        this.dbh = dbh;
-//        this.height = height;
-//        this.longitude = "";
-//        this.latitude = "";
-//        this.pid = "";
-//        this.imgid = "";
-//        this.imgloc = "";
-//    }
 }

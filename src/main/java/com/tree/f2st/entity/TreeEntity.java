@@ -16,49 +16,40 @@ import org.springframework.data.annotation.Id;
 public class TreeEntity {
 
 
-//    @javax.persistence.Id
-//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private long treeNo;
-
-    @javax.persistence.Id
     @Id
     @Column(name="tid")
-    private String tid;
+    private String tid; // 나무아이디
     @Column(name="dist")
-    private String dist;
+    private String dist; // 거리
     @Column(name="dbh")
-    private String dbh;
+    private String dbh; // 흉고직경
     @Column(name="height")
-    private String height;
-    @Column(name="longitude")
-    private String longitude;
+    private String height;  // 수고
+    @Column(name="azimuth")
+    private String azimuth; //방위각
     @Column(name="latitude")
-    private String latitude;
+    private String latitude; // 위도
+    @Column(name="longitude")
+    private String longitude; // 경도
     @Column(name="pid")
-    private String pid;
+    private String pid; // 조사자
+    @Column(name="imgPath")
+    private String imgPath; //실제 서버 DTO에서는 이미지패스추가
 
-    @Column(name="imgid")
-    private String imgid;
-    @Column(name="imgloc")
-    private String imgloc;
-    @Column(name="evolume") @Setter
-    private String evolume;
 
     @Builder
     public TreeEntity(
-            String tid, String dist, String dbh, String height,
-                      String longitude, String latitude, String pid,
-                      String imgid, String imgloc){
+            String tid, String dist, String dbh, String height, String azimuth,
+            String latitude,String longitude, String pid,String imgPath){
         this.tid = tid;
         this.dist = dist;
         this.dbh = dbh;
         this.height = height;
-        this.longitude = longitude;
+        this.azimuth=azimuth;
         this.latitude = latitude;
+        this.longitude = longitude;
         this.pid = pid;
-        this.imgid = imgid;
-        this.imgloc = imgloc;
-        this.evolume = "0.0";
+        this.imgPath=imgPath;
     }
 
 }
