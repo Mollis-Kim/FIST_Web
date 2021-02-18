@@ -20,6 +20,18 @@ public class TreeDTO {
     private String pid; // 조사자
     private String imgPath; //실제 서버 DTO에서는 이미지패스추가
 
+    public TreeDTO(String tid){
+        this.tid = tid;
+        this.dist = "";
+        this.dbh = "";
+        this.height = "";
+        this.azimuth="";
+        this.latitude = "";
+        this.longitude = "";
+        this.pid = "";
+        this.imgPath="";
+    }
+
     public TreeEntity toEntity(){
         TreeEntity treeEntity =TreeEntity.builder()
                 .tid(tid)

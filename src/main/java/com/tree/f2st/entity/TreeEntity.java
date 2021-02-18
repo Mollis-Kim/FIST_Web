@@ -8,6 +8,9 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Getter
 @Setter
 @Entity
@@ -36,6 +39,7 @@ public class TreeEntity {
     private String pid; // 조사자
     @Column(name="imgPath")
     private String imgPath; //실제 서버 DTO에서는 이미지패스추가
+
 
 
     @Builder
