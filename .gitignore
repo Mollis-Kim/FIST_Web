@@ -33,5 +33,4 @@ out/
 
 ### VS Code ###
 .vscode/
-/src/main/webapp/tree_original_image/
-/src/main/webapp/tree_analyzed_image/
+
