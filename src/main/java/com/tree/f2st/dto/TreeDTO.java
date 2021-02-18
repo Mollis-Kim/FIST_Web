@@ -2,6 +2,7 @@ package com.tree.f2st.dto;
 
 import com.tree.f2st.entity.TreeEntity;
 import lombok.*;
+import org.apache.poi.ss.formula.functions.T;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class TreeDTO {
     private String imgPath; //실제 서버 DTO에서는 이미지패스추가
 
     public TreeEntity toEntity(){
-        TreeEntity treeEntity = TreeEntity.builder()
+        TreeEntity treeEntity =TreeEntity.builder()
                 .tid(tid)
                 .dist(dist)
                 .dbh(dbh)
@@ -32,5 +33,9 @@ public class TreeDTO {
                 .imgPath(imgPath)
                 .build();
         return treeEntity;
+    }
+
+    public void show(){
+        System.out.println(tid+" "+dist+" "+dbh+" "+height+" "+azimuth+" "+latitude+" "+longitude+" "+pid+" "+imgPath);
     }
 }

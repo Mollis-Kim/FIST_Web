@@ -22,6 +22,11 @@ import java.util.Optional;
 public class TreeService {
     @Autowired
     private TreeRepository treeRepository;
+    @Transactional
+    public String save(TreeDTO treeDTO)
+    {
+        return treeRepository.save(treeDTO.toEntity()).toString();
+    }
 
     public List<TreeEntity> findAll() {
         List<TreeEntity> trees = new ArrayList<>();
@@ -29,16 +34,21 @@ public class TreeService {
         return trees;
     }
 
-    @Transactional
-    public String save(TreeDTO treeDTO)
-    {
-        return treeRepository.save(treeDTO.toEntity()).toString();
+    public boolean isExist(String tid){
+        List<TreeEntity> t = findByTid(tid);
+
+        return (t.size()>0)? true: false;
     }
 
     public  List<TreeEntity> findByTid(String tid){
         List<TreeEntity> t = new ArrayList<>();
         treeRepository.findByTid(tid).forEach(e->t.add(e));
         return t;
+    }
+
+    public boolean saveImg(String tid, String imgPath){
+        treeRepository.updateImgPath(tid,imgPath);
+        return true;
     }
 
 

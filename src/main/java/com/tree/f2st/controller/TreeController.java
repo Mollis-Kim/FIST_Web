@@ -1,11 +1,15 @@
 package com.tree.f2st.controller;
 
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tree.f2st.dto.TreeDTO;
 import com.tree.f2st.entity.TreeEntity;
 import com.tree.f2st.service.TreeService;
 import com.tree.f2st.util.ExcelUtil;
 import org.apache.commons.compress.utils.IOUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -16,10 +20,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,11 +68,68 @@ public class TreeController {
         return new ResponseEntity<List<TreeEntity>>(tree, HttpStatus.OK);
     }
 
+
+    @RequestMapping("/imgsUpload")
+    public void uploadMulti(@RequestBody ArrayList<MultipartFile> files, HttpServletRequest request
+            , HttpServletResponse response) throws Exception {
+
+        String basePath = request.getServletContext().getRealPath("")+"tree_original_image";
+        // 파일 업로드(여러개) 처리 부분
+        System.out.println("받기성공"+files.size());
+
+        for (MultipartFile file : files) {
+            String originalName = file.getOriginalFilename();
+
+            String id = parseToId(originalName);
+
+            if(treeService.isExist(id)) {
+                System.out.println(originalName);
+                String filePath = basePath + "/" + originalName;
+                File dest = new File(filePath);
+                file.transferTo(dest);
+
+                String imgPath = dest.getAbsolutePath();
+                boolean rt = treeService.saveImg(id, imgPath);
+                System.out.println(id+" "+rt);
+            }
+        }
+    }
+
+    String parseToId(String file){
+            int idx = file.indexOf("_") + 1;
+            int lidx = file.lastIndexOf(".");
+            String treeId = file.substring(idx, lidx);
+            return treeId;
+    }
+
+
+    @RequestMapping("/jsonUpload")
+    public void uploadMulti2(@RequestBody String files, HttpServletRequest request
+            , HttpServletResponse response) throws Exception {
+
+        //rootPath가 바탕화면에 잡혀있고, 바탕화면에 img라는 폴더 생성해야함.
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(files);
+
+        org.json.simple.JSONArray jsonArray = (JSONArray) obj;
+        for (Object o : jsonArray) {
+            JSONObject jo = (JSONObject) o;
+            ObjectMapper objectMapper = new ObjectMapper();
+            TreeDTO treeDTO = objectMapper.readValue(jo.toJSONString(), TreeDTO.class);
+
+            //treeDTO.show();
+            treeService.save(treeDTO);
+        }
+    }
+
+    /*
     @PostMapping("/save")
     public @ResponseBody String save(@RequestBody TreeDTO tree){
         String msg = treeService.save(tree);
         return msg;
     }
+
+     */
 
     //.xlsx file download
     @GetMapping(value = "/download")

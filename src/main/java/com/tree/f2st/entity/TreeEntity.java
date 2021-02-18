@@ -9,13 +9,14 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.Id;
 
 @Getter
+@Setter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="tree")
 public class TreeEntity {
 
 
+    @javax.persistence.Id
     @Id
     @Column(name="tid")
     private String tid; // 나무아이디
