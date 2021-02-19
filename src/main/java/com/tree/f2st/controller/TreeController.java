@@ -20,14 +20,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,14 +44,54 @@ public class TreeController {
     @RequestMapping(value = "/map")
     public String home(Model model){
         model.addAttribute("treeList",treeService.findAll());
-        return "index.html";
+        return "index";
     }
+
+    @ResponseBody
+    @GetMapping("/getimg")
+    public byte[] getMulti(@RequestParam("id") String tid) throws Exception {
+        System.out.println(tid);
+        String filePath;
+        List<TreeEntity> tree = treeService.findByTid(tid);
+        filePath = tree.get(0).getImgPath();
+
+        File f = new File(filePath);
+
+        byte[] bytes = null;
+        if(f.isFile()){
+            bytes= Files.readAllBytes(f.toPath());
+        }
+        System.out.println(f.toPath().toString());
+        return bytes;
+    }
+
+
+    public static byte[] inputStreamToByteArray(InputStream is) {
+        byte[] resBytes = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int read = -1;
+        try {
+            while ( (read = is.read(buffer)) != -1 ) {
+                bos.write(buffer, 0, read);
+            }
+
+            resBytes = bos.toByteArray();
+            bos.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return resBytes;
+    }
+
 
     @RequestMapping(value = "/map/{tid}")
     public String detail(Model model, @PathVariable("tid") String tid){
         model.addAttribute("treeList",treeService.findAll());
         model.addAttribute("detail", treeService.findByTid(tid));
-        return "index.html";
+        return "index";
     }
 
 

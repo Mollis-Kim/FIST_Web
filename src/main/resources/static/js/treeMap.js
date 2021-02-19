@@ -1,15 +1,7 @@
 
+let testMSG= "test@@@"
 
 
-// 지도 관련 자바스크립트
-let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-let options = { //지도를 생성할 때 필요한 기본 옵션
-    center: new kakao.maps.LatLng(36.377938, 128.145146), //지도의 중심좌표.
-    level: 3 //지도의 레벨(확대, 축소 정도)
-};
-
-
-let map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
 let positions = new Array();
 
@@ -18,8 +10,9 @@ for(var i=0; i<treePosArray.length; i++)
         title: treePosArray[i][0],
         latlng: new kakao.maps.LatLng(treePosArray[i][1], treePosArray[i][2])
     }); //마커표시 위치 지정
+
 // 마커를 생성합니다
-var imageSrc = "https://www.flaticon.com/svg/static/icons/svg/1497/1497192.svg";
+var imageSrc = "/icon/treeicon.png";
 
 for (var i = 0; i < positions.length; i ++) {
 
@@ -37,6 +30,7 @@ for (var i = 0; i < positions.length; i ++) {
         image : markerImage // 마커 이미지
     });
 }
+
 
 
 /*다각형 생성부분*/
@@ -67,4 +61,4 @@ var polygon = new kakao.maps.Polygon({
 });
 
 // 지도에 다각형을 표시합니다
-polygon.setMap(map);
+//polygon.setMap(map);
