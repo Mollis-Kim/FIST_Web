@@ -95,6 +95,7 @@ public class AnalysisController {
         model.addAttribute("completeMsg","display:None;");
         model.addAttribute("sidebar_treeList", analysisService.getAnalyzedTreeList());
         model.addAttribute("formdivstyle","display:None;");
+
         return "analysisHome";
     }
 
@@ -128,26 +129,28 @@ public class AnalysisController {
 
     @ResponseBody
     @GetMapping("/getimg")
-    public List<byte[]> getMulti(@RequestParam("id") String tid) throws Exception {
-        System.out.println("이미지 겟 호출");
-        String filePath;
-        List<AnalysisDTO> trees = analysisService.findByTid(tid);
+    public byte[] getMulti(@RequestParam("id") String tid, @RequestParam("method") String method ) throws Exception {
+        System.out.println(tid);
 
-        List<byte[]> result = new ArrayList<>();
 
-        for(AnalysisDTO analysisDTO : trees) {
+        List<AnalysisDTO> analysisDTOS =  analysisService.findByTid(tid);
 
-            Path p = Path.of(analysisDTO.getAnalyzedImgPath());
-            filePath = p.toString();
-            System.out.println(filePath);
-            File f = new File(filePath);
-
-            byte[] bytes = null;
-            if (f.isFile()) {
-                bytes = Files.readAllBytes(f.toPath());
+        AnalysisDTO analysisDTO = null;
+        for(AnalysisDTO analysisDTO1: analysisDTOS){
+            if(analysisDTO1.getMethod().equals(method)){
+                analysisDTO=analysisDTO1;
             }
-            result.add(bytes);
         }
-        return result;
+
+        String filePath = analysisDTO.getAnalyzedImgPath();
+
+        File f = new File(filePath);
+
+        byte[] bytes = null;
+        if(f.isFile()){
+            bytes= Files.readAllBytes(f.toPath());
+        }
+        System.out.println(f.toPath().toString());
+        return bytes;
     }
 }

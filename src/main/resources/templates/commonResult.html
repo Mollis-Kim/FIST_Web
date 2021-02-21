@@ -66,14 +66,14 @@
                         <script src="/js/getImg.js"></script>
 
 
-                        <img  id = "imgbox" style="width:400px;height:800px;" class="imgbox" >
+                        <img  th:id="${data.method}" style="width:400px;height:800px;" class="imgbox" >
                     </div></td></tr>
                     </table>
-
+        <script>
+            getImageList(data.tid, data.method);
+        </script>
     </th:inline>
-    <script>
-        getImageList(data.tid);
-    </script>
+
 </div>
 
 </body>
