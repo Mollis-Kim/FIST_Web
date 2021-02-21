@@ -1,5 +1,6 @@
 package com.tree.f2st.dto;
 
+import com.tree.f2st.entity.AnalysisEntity;
 import com.tree.f2st.entity.TreeEntity;
 import lombok.*;
 import org.apache.poi.ss.formula.functions.T;
@@ -45,6 +46,18 @@ public class TreeDTO {
                 .imgPath(imgPath)
                 .build();
         return treeEntity;
+    }
+
+    public void of(TreeEntity te){
+        this.setTid(te.getTid());
+        this.dist=te.getDist();
+        this.dbh=te.getDbh();
+        this.azimuth=te.getAzimuth();
+        this.height=te.getHeight();
+        this.latitude=te.getLatitude();
+        this.longitude=te.getLongitude();
+        this.pid=te.getPid();
+        this.imgPath=te.getImgPath();
     }
 
     public void show(){

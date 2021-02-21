@@ -13,10 +13,6 @@
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
                     <th:inline inline-block; th:each="tree : ${treedetail}">
                         <script th:inline="javascript">
-
-                            content = document.getElementById("content");
-                            content.style.paddingLeft=0
-
                             /*<![CDATA[*/
                             var tree =/*[[${tree}]]*/
                                 console.log(tree)

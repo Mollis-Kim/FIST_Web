@@ -2,19 +2,17 @@ package com.tree.f2st.dto;
 
 import com.tree.f2st.entity.AnalysisEntity;
 import com.tree.f2st.entity.TreeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
+@ToString
 @Setter
 @NoArgsConstructor
 public class AnalysisDTO {
 
-    private TreeEntity treeEntity;
+    private String tid;
     private String method;
     private String totalVolume;
     private String logsVolume;
@@ -25,11 +23,11 @@ public class AnalysisDTO {
     private String analyzedImgPath;
 
     @Builder
-    public AnalysisDTO(TreeDTO treeDTO,
+    public AnalysisDTO(String tid,
                           String method, String totalVolume, String logsVolume,
                           String logsLength, String logsEdia, String logsSweep,
                           String deduction, String analyzedImgPath){
-        this.treeEntity=treeDTO.toEntity();
+        this.tid=tid;
         this.method = method;
         this.totalVolume=totalVolume;
         this.logsVolume=logsVolume;
@@ -40,10 +38,21 @@ public class AnalysisDTO {
         this.analyzedImgPath = analyzedImgPath;
     }
 
+    public void of(AnalysisEntity ae){
+        this.setTid(ae.getTreeEntity().getTid());
+        this.setMethod(ae.getMethod());
+        this.setTotalVolume(ae.getTotalVolume());
+        this.setLogsVolume(ae.getLogsVolume());
+        this.setLogsLength(ae.getLogsLength());
+        this.setLogsEdia(ae.getLogsEdia());
+        this.setLogsSweep(ae.getLogsSweep());
+        this.setDeduction(ae.getDeduction());
+        this.setAnalyzedImgPath(ae.getAnalyzedImgPath());
+    }
 
     public AnalysisEntity toAnalysisEntity(){
         AnalysisEntity analysisEntity = AnalysisEntity.builder()
-                .treeEntity(treeEntity)
+                .treeEntity(new TreeDTO(tid).toEntity())
                 .method(method)
                 .totalVolume(totalVolume)
                 .logsVolume(logsVolume)
@@ -55,4 +64,6 @@ public class AnalysisDTO {
                 .build();
         return analysisEntity;
     }
+
+
 }

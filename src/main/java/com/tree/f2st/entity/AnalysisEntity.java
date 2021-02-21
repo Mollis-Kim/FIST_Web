@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="analysis")
 @Entity
@@ -19,6 +20,7 @@ public class AnalysisEntity {
     @ManyToOne(targetEntity = TreeEntity.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "tid")
     private TreeEntity treeEntity;
+
 
     @Column(name="method")
     private String method;

@@ -73,10 +73,8 @@
             </div>
         </nav>
 
-        <div th:if="${detail != null}" th:include="detail.html :: detailfrag(${detail})">
 
-        </div>
-        <div th:unless="${detail != null}">
+        <div th:if="${detail != null}" th:include="detail.html :: detailfrag(${detail})"></div>
             <table class="tb_tree">
                 <tr>
                     <th>tid</th>
@@ -110,9 +108,6 @@
             </script>
         </div>
         <!--   아래 div에서 지도 삽입    -->
-
-<!--        <script th:src="@{/js/treeMap.js}" ></script>-->
-
     </div>
 </div>
 

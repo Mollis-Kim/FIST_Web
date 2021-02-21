@@ -1,10 +1,138 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <title>분석 홈</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Web Home</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=88ff6c3b6ab905ccc189478337342538"></script>
+    <style>
+        #loading {
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            position: fixed;
+            display: block;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    분석 홈페이지
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+
+        <div class="sidebar-header"><h3>Web-Fist</h3></div>
+
+        <ul class="list-unstyled components">
+            <li><a th:href="@{'/analysis'}">Home</a></li>
+
+            <li class="active">
+                <a href="#analyzedtreeSubmenu" data-toggle="collapse" aria-expanded="false">Tree List</a>
+                <ul class="collapse list-unstyled" id="analyzedtreeSubmenu">
+                    <div class="tree-group" th:each="test : ${sidebar_treeList}">
+                        <li><a th:href="@{'/analysis/get?tid='+${test}}" th:text="${test}"></a></li>
+                    </div>
+                </ul>
+            </li>
+
+
+            <ul class="list-unstyled CTAs">
+                <li>
+                    <a th:href="@{'/webfist/download'}" class="download">Download Excel(.xlsx)</a>
+                </li>
+            </ul>
+        </ul>
+    </nav>
+    <div id="content" style="padding-left: 50px">
+
+        <!--  사이드바 버튼-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span>Toggle Sidebar</span>
+                </button>
+            </div>
+        </nav>
+
+        <script type="text/javascript">
+            function showloading() {
+                let loading = document.getElementById("loading");
+                loading.style.display="block";
+                return true;
+            }
+        </script>
+
+        <div id="loading" style="display: none">
+            <img id="loading-image" src="/img/loading.gif" alt="Loading..." /><br>
+            <span> 분석중입니다 잠시만 기다려주세요.</span><br>
+            <span> 분석에 15~30초 정도 소요 될 수 있습니다.</span>
+        </div>
+
+
+        <div id = formdiv th:style="${formdivstyle}">
+        <form name="form" method="post" action="/analysis" >
+            <div style="display: inline-block">조사날짜_조사지_측정시간</div>
+            <div style="display: inline-block; margin-left: 25px" >분석방법</div><br>
+            <select  name="tid">
+                <option th:value="${treel.tid}" th:label="${treel.tid}"th:each="treel : ${treeList}"></option>
+            </select>
+
+            <select  name="method" style="margin-left: 25px">
+                <option th:value="${methodl}" th:label="${methodl}"th:each="methodl : ${methodList}"></option>
+            </select>
+            <input type="submit" name="sumbit" id="submit" class="btn btn-info" style="height: 100%" onclick="showloading()">
+        </form>
+        </div>
+
+        <div id="completeMsg"  th:style="${completeMsg}" >
+            분석을 완료하였습니다.<br>
+            사이드바 메뉴를 통해 분석조회가 가능합니다.
+        </div>
+
+        <div th:if="${analysis != null }" th:include="commonResult.html :: analysisfrag(${analysis})" style="height: 800px; width: 800px"></div>
+
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+<!-- jQuery Custom Scroller CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar, #content').toggleClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    });
+</script>
 </body>
 </html>
