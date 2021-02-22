@@ -30,9 +30,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -89,6 +87,40 @@ public class AnalysisService {
             return null;
         }
     }
+
+    public List<String> findMethodByTid(String tid){
+
+        List<String> result = new ArrayList<>();
+
+        TreeDTO treeDTO = new TreeDTO(tid);
+        TreeEntity te = treeDTO.toEntity();
+
+        ArrayList<AnalysisEntity> t = (ArrayList<AnalysisEntity>) analysisRepository.findByTreeEntity(te);
+        if(t!=null) {
+            List<AnalysisDTO> analysisDTOS = new ArrayList<>();
+            for(AnalysisEntity ae : t) {
+                AnalysisDTO analysisDTO = new AnalysisDTO();
+                analysisDTO.of(ae);
+
+                result.add(analysisDTO.getMethod());
+            }
+        }
+
+        return result;
+
+    }
+
+    public AnalysisDTO findByTidAndMethod(String tid, String method){
+        ArrayList<AnalysisDTO> analysisDTOS = (ArrayList<AnalysisDTO>) findByTid(tid);
+        for(AnalysisDTO analysisDTO : analysisDTOS){
+            if(analysisDTO.getMethod().equals(method)){
+                return analysisDTO;
+            }
+        }
+        return null;
+    }
+
+
 
     public boolean analyze(String tid, String method, HttpServletRequest request) throws IOException {
         // 오리지널이미지파일 받아서 파이썬 실행 분석 후

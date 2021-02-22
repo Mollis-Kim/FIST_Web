@@ -2,30 +2,21 @@ package com.tree.f2st.controller;
 
 import com.tree.f2st.dto.AnalysisDTO;
 import com.tree.f2st.dto.TreeDTO;
-import com.tree.f2st.entity.AnalysisEntity;
-import com.tree.f2st.entity.TreeEntity;
 import com.tree.f2st.service.AnalysisService;
-import com.tree.f2st.service.TreeService;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Handler;
 
 @Controller
 @RequestMapping("/analysis")
@@ -65,6 +56,7 @@ public class AnalysisController {
                                  HttpServletRequest request) throws IOException {
         System.out.println(tid+" "+method);
 
+
         model.addAttribute("treeList", analysisService.getTreeList());
         model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter")));
 
@@ -76,27 +68,60 @@ public class AnalysisController {
         return "analysisHome";
     }
 
-    // id조회 후 분석결과 출력
-    @GetMapping("/get")
-    public String detail(Model model, @RequestParam("tid") String tid){
 
-        ArrayList<AnalysisDTO>  ad = (ArrayList<AnalysisDTO>) analysisService.findByTid(tid);
-        System.out.println("디테일함수 호출되고," + tid +" "+ad==null);
 
-        if(ad!=null){
-            //한번 이상 분석이 완료된 상황
-            model.addAttribute("analysis", analysisService.findByTid(tid));
-        }else{
-            //treeRepository에는 존재하지만, 분석되지 않은 정보.
-            System.out.println("존재XXX");
+
+    // 조회화면
+    @GetMapping("/search")
+    public String showSearchView(Model model){
+        ArrayList<String> treeNames =  (ArrayList<String>) analysisService.getAnalyzedTreeList();
+        model.addAttribute("treeList", treeNames); //  분석된 나무 리스트
+
+        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter"))); //방법 리스트
+
+
+        Map<String, Object> hm = new HashMap<>();
+        ArrayList<ArrayList<String>> methods = new ArrayList<>();
+
+
+        JSONObject jo = new JSONObject();
+
+        for(String treename : treeNames){
+            ArrayList<String> method = (ArrayList<String>) analysisService.findMethodByTid(treename);
+            hm.put(treename, method);
+            jo.put(treename, method);
         }
-        model.addAttribute("treeList", analysisService.getTreeList());
-        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter")));
-        model.addAttribute("completeMsg","display:None;");
-        model.addAttribute("sidebar_treeList", analysisService.getAnalyzedTreeList());
-        model.addAttribute("formdivstyle","display:None;");
 
-        return "analysisHome";
+        System.out.println(jo.toJSONString());
+
+
+
+        //model.addAttribute("methods", jo);
+
+
+
+        model.addAttribute("data", null);
+        return "searchAnalysisResult";
+    }
+
+    // id조회 후 분석결과 출력
+    @PostMapping("/get")
+    public String detail(Model model, @RequestParam("tid") String tid, @RequestParam("method") String method){
+
+        AnalysisDTO analysisDTO = analysisService.findByTidAndMethod(tid,method);
+
+
+        if(analysisDTO!=null){
+            model.addAttribute("data", analysisDTO);
+        }else{
+            model.addAttribute("data", null);
+        }
+
+        ArrayList<String> treeNames =  (ArrayList<String>) analysisService.getAnalyzedTreeList();
+        model.addAttribute("treeList", treeNames); //  분석된 나무 리스트
+        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter"))); //방법 리스트
+
+        return "searchAnalysisResult";
     }
 
 

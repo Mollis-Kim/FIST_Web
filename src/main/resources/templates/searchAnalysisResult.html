@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>결과</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+</head>
+<body>
+<div class="common-result" th:fragment="analysisfrag(analysis)">
+    <nav id="sidebar">
+
+        <div class="sidebar-header"><h3>Web-Fist</h3></div>
+
+        <ul class="list-unstyled components">
+            <li><a th:href="@{'/analysis'}">Home</a></li>
+
+            <li><a th:href="@{'/analysis/search'}">Check Result</a></li>
+
+            <ul class="list-unstyled CTAs">
+                <li>
+                    <a th:href="@{'/webfist/download'}" class="download">Download Excel(.xlsx)</a>
+                </li>
+            </ul>
+        </ul>
+    </nav>
+
+
+
+
+    <div id="content" style="padding-left: 50px">
+        <div id=formdiv>
+            <form name="form" method="post" action="/analysis/get">
+                <div style="display: inline-block">조사날짜_조사지_측정시간</div>
+                <div style="display: inline-block; margin-left: 25px">분석방법</div>
+                <br>
+                <select name="tid">
+                    <option th:value="${treel}" th:label="${treel}" th:each="treel : ${treeList}"></option>
+                </select>
+                <select name="method" style="margin-left: 25px">
+                    <option th:value="${methodl}" th:label="${methodl}" th:each="methodl : ${methodList}"></option>
+                </select>
+                <input type="submit" name="sumbit" id="submit" class="btn btn-info" style="height: 100%" value="조회">
+            </form>
+        </div>
+
+
+        <div th:if="${data != null}">
+            결과창
+
+            <table>
+                <tr>
+                    <td>
+                        <table border="2px solid black" class="tb_tree"
+                               style="display:inline-block; margin-right: 5px;width:400px; height: 800px">
+                            <tr>
+                                <td colspan="2"><h3>분석 결과</h3></td>
+                            </tr>
+                            <tr>
+                                <td><b>나무 아이디</b></td>
+                                <td th:text="${data.tid}"></td>
+                            </tr>
+                            <tr>
+                                <td><b>총 이용재적</b></td>
+                                <td th:text="${data.totalVolume}"></td>
+                            </tr>
+                            <tr>
+                                <td><b>통나무별<br>이용재적</b></td>
+                                <td th:text="${data.logsVolume}"></td>
+                            </tr>
+                            <tr>
+                                <td><b>통나무별<br>높이</b></td>
+                                <td th:text="${data.logsLength}"></td>
+                            </tr>
+                            <tr>
+                                <td><b>통나무별<br>말구직경</b></td>
+                                <td th:text="${data.logsEdia}"></td>
+                            </tr>
+                            <tr>
+                                <td><b>기울기<br>기울기</b></td>
+                                <td th:text="${data.logsSweep}"></td>
+                            </tr>
+                            <tr>
+                                <td><b>총 공제량</b></td>
+                                <td th:text="${data.deduction}">테스</td>
+                            </tr>
+                            <tr>
+                                <td><b>분석 방식</b></td>
+                                <td th:text="${data.method}"></td>
+                            </tr>
+                            </td>
+                        </table>
+                    </td>
+                    <td>
+                        <div id="img"
+                             style="display: inline-block;  width:400px;height:800px; border: 3px solid #000000">
+                            <script>
+                                imgsrc = null;
+                            </script>
+                            <script src="/js/getImg.js"></script>
+
+
+                            <img th:id="${data.method}" style="width:400px;height:800px;" class="imgbox">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <script>
+                getImageList(data.tid, data.method);
+            </script>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

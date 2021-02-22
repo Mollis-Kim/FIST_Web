@@ -42,14 +42,7 @@
         <ul class="list-unstyled components">
             <li><a th:href="@{'/analysis'}">Home</a></li>
 
-            <li class="active">
-                <a href="#analyzedtreeSubmenu" data-toggle="collapse" aria-expanded="false">Tree List</a>
-                <ul class="collapse list-unstyled" id="analyzedtreeSubmenu">
-                    <div class="tree-group" th:each="test : ${sidebar_treeList}">
-                        <li><a th:href="@{'/analysis/get?tid='+${test}}" th:text="${test}"></a></li>
-                    </div>
-                </ul>
-            </li>
+            <li><a th:href="@{'/analysis/search'}">Check Result</a></li>
 
 
             <ul class="list-unstyled CTAs">
@@ -97,7 +90,7 @@
             <select  name="method" style="margin-left: 25px">
                 <option th:value="${methodl}" th:label="${methodl}"th:each="methodl : ${methodList}"></option>
             </select>
-            <input type="submit" name="sumbit" id="submit" class="btn btn-info" style="height: 100%" onclick="showloading()">
+            <input type="submit" name="sumbit" id="submit" class="btn btn-info" style="height: 100%" value="분석" onclick="showloading()">
         </form>
         </div>
 
@@ -106,7 +99,7 @@
             사이드바 메뉴를 통해 분석조회가 가능합니다.
         </div>
 
-        <div th:if="${analysis != null }" th:include="commonResult.html :: analysisfrag(${analysis})" style="height: 800px; width: 800px"></div>
+
 
     </div>
 </div>
