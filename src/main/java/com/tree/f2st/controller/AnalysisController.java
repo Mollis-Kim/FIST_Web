@@ -96,7 +96,7 @@ public class AnalysisController {
 
 
 
-        //model.addAttribute("methods", jo);
+        model.addAttribute("jo", jo);
 
 
 
