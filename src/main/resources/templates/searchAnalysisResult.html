@@ -90,7 +90,12 @@
 
         <div th:if="${data != null}">
             결과창
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                var data =/*[[${data}]]*/
+                /*]]>*/
 
+            </script>
             <table>
                 <tr>
                     <td>

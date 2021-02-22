@@ -77,25 +77,13 @@ public class AnalysisController {
         ArrayList<String> treeNames =  (ArrayList<String>) analysisService.getAnalyzedTreeList();
         model.addAttribute("treeList", treeNames); //  분석된 나무 리스트
 
-        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter"))); //방법 리스트
-
-
-        Map<String, Object> hm = new HashMap<>();
-        ArrayList<ArrayList<String>> methods = new ArrayList<>();
-
-
         JSONObject jo = new JSONObject();
 
         for(String treename : treeNames){
-            ArrayList<String> method = (ArrayList<String>) analysisService.findMethodByTid(treename);
-            hm.put(treename, method);
-            jo.put(treename, method);
+            ArrayList<String> methods = (ArrayList<String>) analysisService.findMethodByTid(treename);
+            jo.put(treename, methods);
         }
-
         System.out.println(jo.toJSONString());
-
-
-
         model.addAttribute("jo", jo);
 
 
@@ -119,7 +107,15 @@ public class AnalysisController {
 
         ArrayList<String> treeNames =  (ArrayList<String>) analysisService.getAnalyzedTreeList();
         model.addAttribute("treeList", treeNames); //  분석된 나무 리스트
-        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter"))); //방법 리스트
+
+        JSONObject jo = new JSONObject();
+
+        for(String treename : treeNames){
+            ArrayList<String> methods = (ArrayList<String>) analysisService.findMethodByTid(treename);
+            jo.put(treename, methods);
+        }
+        System.out.println(jo.toJSONString());
+        model.addAttribute("jo", jo);
 
         return "searchAnalysisResult";
     }

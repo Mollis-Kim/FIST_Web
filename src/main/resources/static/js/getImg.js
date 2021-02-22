@@ -51,7 +51,6 @@ function getImageList(id,method){
         success: function (data) {
             console.log("성공")
             let url = URL.createObjectURL(data);
-            let len =
             console.log(url)
             imgbox.src = url;
             imgbox.offsetWidth= "400px";
