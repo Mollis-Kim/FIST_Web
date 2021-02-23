@@ -26,7 +26,8 @@
         <div class="sidebar-header"><h3>Web-Fist</h3></div>
 
         <ul class="list-unstyled components">
-            <li><a th:href="@{'/analysis'}">Home</a></li>
+            <li><a th:href="@{'/webfist/map'}">Home</a></li>
+            <li><a th:href="@{'/analysis'}">Analysis</a></li>
 
             <li><a th:href="@{'/analysis/search'}">Check Result</a></li>
 
@@ -69,6 +70,16 @@
     </script>
 
     <div id="content" style="padding-left: 50px">
+        <!--  사이드바 버튼-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span>Toggle Sidebar</span>
+                </button>
+            </div>
+        </nav>
+
         <div id=formdiv>
             <form name="form" method="post" action="/analysis/get">
                 <div style="display: inline-block">조사날짜_조사지_측정시간</div>
