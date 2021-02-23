@@ -155,6 +155,11 @@ public class TreeController {
         org.json.simple.JSONArray jsonArray = (JSONArray) obj;
         for (Object o : jsonArray) {
             JSONObject jo = (JSONObject) o;
+
+            String[] tokens = (jo.get("tid").toString()).split("_");
+            // 날짜_조사지_시간 이므로... [날짜,조사지,시간]
+            String place = tokens[1];
+            jo.put("investigationPlace",place);
             ObjectMapper objectMapper = new ObjectMapper();
             TreeDTO treeDTO = objectMapper.readValue(jo.toJSONString(), TreeDTO.class);
 

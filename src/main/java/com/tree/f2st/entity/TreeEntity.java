@@ -39,13 +39,13 @@ public class TreeEntity {
     private String pid; // 조사자
     @Column(name="imgPath")
     private String imgPath; //실제 서버 DTO에서는 이미지패스추가
-
+    private String investigationPlace; // 조사장소
 
 
     @Builder
     public TreeEntity(
             String tid, String dist, String dbh, String height, String azimuth,
-            String latitude,String longitude, String pid,String imgPath){
+            String latitude,String longitude, String pid,String imgPath, String investigationPlace){
         this.tid = tid;
         this.dist = dist;
         this.dbh = dbh;
@@ -55,6 +55,7 @@ public class TreeEntity {
         this.longitude = longitude;
         this.pid = pid;
         this.imgPath=imgPath;
+        this.investigationPlace=investigationPlace;
     }
 
 }
