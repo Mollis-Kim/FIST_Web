@@ -21,6 +21,7 @@ public class TreeDTO {
     private String pid; // 조사자
     private String investigationPlace; // 조사장소
     private String imgPath; //실제 서버 DTO에서는 이미지패스추가
+    private String location;
 
     public TreeDTO(String tid){
         this.tid = tid;
@@ -33,6 +34,7 @@ public class TreeDTO {
         this.pid = "";
         this.imgPath="";
         this.investigationPlace="";
+        this.location="";
     }
 
     public TreeEntity toEntity(){
@@ -47,6 +49,7 @@ public class TreeDTO {
                 .pid(pid)
                 .imgPath(imgPath)
                 .investigationPlace(investigationPlace)
+                .location(location)
                 .build();
         return treeEntity;
     }
@@ -62,9 +65,7 @@ public class TreeDTO {
         this.pid=te.getPid();
         this.imgPath=te.getImgPath();
         this.investigationPlace=te.getInvestigationPlace();
+        this.location=te.getLocation();
     }
 
-    public void show(){
-        System.out.println(tid+" "+dist+" "+dbh+" "+height+" "+azimuth+" "+latitude+" "+longitude+" "+pid+" "+imgPath);
-    }
 }

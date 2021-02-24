@@ -2,6 +2,7 @@ package com.tree.f2st.controller;
 
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.source.tree.Tree;
 import com.tree.f2st.dto.TreeDTO;
 import com.tree.f2st.entity.TreeEntity;
 import com.tree.f2st.service.TreeService;
@@ -107,6 +108,37 @@ public class TreeController {
     public @ResponseBody ResponseEntity< List<TreeEntity>> getTree(@PathVariable("tid") String tid){
         List<TreeEntity> tree = treeService.findByTid(tid);
         return new ResponseEntity<List<TreeEntity>>(tree, HttpStatus.OK);
+    }
+
+
+    // 조사지 검색 홈
+    @RequestMapping(value = "/map/other/{value}")
+    public String other(Model model, @PathVariable("value") String value){
+        model.addAttribute("treeList",treeService.findAll());
+        model.addAttribute("pval", value);
+        model.addAttribute("detail",null);
+        return "index";
+    }
+    //조사지 검색 홈+결과
+    @RequestMapping(value = "/map/other/{value}/{key}")
+    public String other(Model model, @PathVariable("value") String value,@PathVariable("key") String key){
+
+        model.addAttribute("treeList",treeService.findAll());
+        model.addAttribute("detail",null);
+        model.addAttribute("pval", value);
+        model.addAttribute("place",key);
+        System.out.println("========= search ....... ============");
+
+
+
+        List<TreeEntity> tel = treeService.findByInvestigationPlace(key);
+        model.addAttribute("searchList",tel);
+
+        for(TreeEntity te : tel){
+            System.out.println(te.toString());
+        }
+        System.out.println("========= search Success ============");
+        return "index";
     }
 
 

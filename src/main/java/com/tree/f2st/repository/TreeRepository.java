@@ -26,9 +26,8 @@ public interface TreeRepository extends JpaRepository<TreeEntity, String> {
     @Query(value = "UPDATE TreeEntity TE SET TE.imgPath = ?2 WHERE TE.tid = ?1")
     int updateImgPath(String tid, String imgPath);
 
-    //위치검색
-
-    //기간검색
-
+    //조사지 검색
+    @Query(value= "select * from tree t where t.investigation_place = ?1", nativeQuery = true)
+    public List<TreeEntity> findByInvestigationPlace(String investigationPlace);
 
 }

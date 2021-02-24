@@ -73,4 +73,10 @@ public class TreeService {
         return in;
     }
 
+    public List<TreeEntity> findByInvestigationPlace(String investKey){
+        List<TreeEntity> trees = treeRepository.findByInvestigationPlace(investKey);
+        return trees;
+    }
+
+
 }

@@ -17,6 +17,11 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
+    <style>
+        .tb_tree td{
+            text-align: center;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 </head>
 <body>
@@ -111,8 +116,9 @@
                 <tr>
                     <td>
                         <table border="2px solid black" class="tb_tree"
-                               style="display:inline-block; margin-right: 5px;width:400px; height: 800px">
-                            <tr>
+                               style=" margin-right: 5px;width:400px; height: 800px" >
+                            <tbody style="width:400px;">
+                            <tr >
                                 <td colspan="2"><h3>분석 결과</h3></td>
                             </tr>
                             <tr>
@@ -125,19 +131,19 @@
                             </tr>
                             <tr>
                                 <td><b>통나무별<br>이용재적</b></td>
-                                <td th:text="${data.logsVolume}"></td>
+                                <td th:text="${data.logsVolume}" class="logs"></td>
                             </tr>
                             <tr>
                                 <td><b>통나무별<br>높이</b></td>
-                                <td th:text="${data.logsLength}"></td>
+                                <td th:text="${data.logsLength}"class="logs"></td>
                             </tr>
                             <tr>
                                 <td><b>통나무별<br>말구직경</b></td>
-                                <td th:text="${data.logsEdia}"></td>
+                                <td th:text="${data.logsEdia}"class="logs"></td>
                             </tr>
                             <tr>
-                                <td><b>기울기<br>기울기</b></td>
-                                <td th:text="${data.logsSweep}"></td>
+                                <td><b>통나무별<br>기울기</b></td>
+                                <td th:text="${data.logsSweep}"class="logs"></td>
                             </tr>
                             <tr>
                                 <td><b>총 공제량</b></td>
@@ -148,14 +154,36 @@
                                 <td th:text="${data.method}"></td>
                             </tr>
                             </td>
+                            </tbody>
                         </table>
                     </td>
+                    <script>
+                        for(i=0; i<4; i++){
+                            let td = document.getElementsByClassName("logs")[i];
+                            let html =""
+                            let string = td.innerText;
+                            strarr = string.split(",");
+                            console.log(strarr)
+                            strarr.reverse();
+                            let suffix = ""
+                            switch (i){
+                                case 0: suffix="n/pixel";break;
+                                case 1: suffix="cm"; break;
+                                case 2: suffix="cm"; break;
+                                case 3:break;
+                            }
+
+                            for(j=0;j<strarr.length-1;j++){
+                                html+=strarr[j]+" "+suffix+"<br>"
+                            }
+                            html+=strarr[strarr.length-1]+" "+suffix;
+                            console.log(html);
+                            td.innerHTML=html;
+                        }
+                    </script>
                     <td>
                         <div id="img"
                              style="display: inline-block;  width:400px;height:800px; border: 3px solid #000000">
-                            <script>
-                                imgsrc = null;
-                            </script>
                             <script src="/js/getImg.js"></script>
 
 

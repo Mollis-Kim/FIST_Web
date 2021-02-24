@@ -92,11 +92,19 @@ public class AnalysisController {
         return "searchAnalysisResult";
     }
 
+    private String[] toStringArray(String s){
+        String[] result = s.split(",");
+        return result;
+    }
+
     // id조회 후 분석결과 출력
     @PostMapping("/get")
     public String detail(Model model, @RequestParam("tid") String tid, @RequestParam("method") String method){
 
         AnalysisDTO analysisDTO = analysisService.findByTidAndMethod(tid,method);
+
+
+
 
 
         if(analysisDTO!=null){

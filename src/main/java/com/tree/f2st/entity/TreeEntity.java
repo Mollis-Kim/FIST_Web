@@ -14,6 +14,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @Entity
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="tree")
 public class TreeEntity {
@@ -39,13 +40,16 @@ public class TreeEntity {
     private String pid; // 조사자
     @Column(name="imgPath")
     private String imgPath; //실제 서버 DTO에서는 이미지패스추가
-    private String investigationPlace; // 조사장소
+    @Column(name="investigationPlace")
+    private String investigationPlace; // 조사장소(별칭)
+    @Column(name="location")
+    private String location; //표준지 좌표
 
 
     @Builder
     public TreeEntity(
             String tid, String dist, String dbh, String height, String azimuth,
-            String latitude,String longitude, String pid,String imgPath, String investigationPlace){
+            String latitude,String longitude, String pid,String imgPath, String investigationPlace, String location){
         this.tid = tid;
         this.dist = dist;
         this.dbh = dbh;
@@ -56,6 +60,7 @@ public class TreeEntity {
         this.pid = pid;
         this.imgPath=imgPath;
         this.investigationPlace=investigationPlace;
+        this.location=location;
     }
 
 }

@@ -40,14 +40,14 @@
                 <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Others</a>
                 <ul class="collapse list-unstyled" id="pageSubmenu">
                     <li>
-                        <a href="#">Page 1</a>
+                        <a th:href="@{'/webfist/map/other/'+${'1'}}">Search Place</a>
                     </li>
-                    <li>
-                        <a href="#">Page 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 3</a>
-                    </li>
+                    <!--                    <li>-->
+                    <!--                        <a href="#">Page 2</a>-->
+                    <!--                    </li>-->
+                    <!--                    <li>-->
+                    <!--                        <a href="#">Page 3</a>-->
+                    <!--                    </li>-->
                 </ul>
             </li>
         </ul>
@@ -76,37 +76,44 @@
 
 
         <div th:if="${detail != null}" th:include="detail.html :: detailfrag(${detail})"></div>
-            <table class="tb_tree">
-                <tr>
-                    <th>tid</th>
-                    <th>dist</th>
-                    <th>dbh</th>
-                    <th>height</th>
-                </tr>
-                <tr th:each="treel : ${treeList}">
-                    <td th:text="${treel.tid}"></td>
-                    <td th:text="${treel.dist}"></td>
-                    <td th:text="${treel.dbh}"></td>
-                    <td th:text="${treel.height}"></td>
-                    <script>
-                        name = "[[${treel.tid}]]";
-                        l1 = parseFloat("[[${treel.latitude}]]");
-                        l2 = parseFloat("[[${treel.longitude}]]");
-                        console.log("좌표확인:",l1,l2);
-                        treePosArray.push([name,l1,l2]);
-                    </script>
-                </tr>
-            </table>
-            <div id="map" style="width:800px;height:800px;"></div>
-            <script>
-                // 지도 관련 자바스크립트
-                let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-                let options = { //지도를 생성할 때 필요한 기본 옵션
-                    center: new kakao.maps.LatLng(l1, l2), //지도의 중심좌표.
-                    level: 8 //지도의 레벨(확대, 축소 정도)
-                };
-                let map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-            </script>
+        <div th:if="${detail == null}">
+            <div th:if ="${pval != null}">
+                <div th:if="${#strings.equals(pval,'1')}" th:include="/searchPlace.html :: search-Place-frag(${treeList})"></div>
+            </div>
+            <div th:if="${pval==null}">
+                <table class="table table-sm table-borderless table-hover">
+                    <tr>
+                        <th scope="col">tid</th>
+                        <th scope="col">dist</th>
+                        <th scope="col">dbh</th>
+                        <th scope="col">height</th>
+                    </tr>
+                    <tr th:each="treel : ${treeList}">
+                        <td> <a th:href="@{'/webfist/map/'+${treel.tid}}" th:text="${treel.tid}"></a></td>
+                        <td th:text="${treel.dist}"></td>
+                        <td th:text="${treel.dbh}"></td>
+                        <td th:text="${treel.height}"></td>
+                        <script>
+                            name = "[[${treel.tid}]]";
+                            l1 = parseFloat("[[${treel.latitude}]]");
+                            l2 = parseFloat("[[${treel.longitude}]]");
+                            console.log("좌표확인:",l1,l2);
+                            treePosArray.push([name,l1,l2]);
+                        </script>
+                    </tr>
+                </table>
+                <div id="map" style="width:800px;height:800px;"></div>
+                <script>
+                    // 지도 관련 자바스크립트
+                    let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+                    let options = { //지도를 생성할 때 필요한 기본 옵션
+                        center: new kakao.maps.LatLng(l1, l2), //지도의 중심좌표.
+                        level: 8 //지도의 레벨(확대, 축소 정도)
+                    };
+                    let map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+                </script>
+            </div>
+
         </div>
         <!--   아래 div에서 지도 삽입    -->
     </div>
