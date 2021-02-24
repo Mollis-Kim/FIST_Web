@@ -103,10 +103,6 @@ public class AnalysisController {
 
         AnalysisDTO analysisDTO = analysisService.findByTidAndMethod(tid,method);
 
-
-
-
-
         if(analysisDTO!=null){
             model.addAttribute("data", analysisDTO);
         }else{

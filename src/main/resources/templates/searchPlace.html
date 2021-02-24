@@ -24,30 +24,46 @@
                 /*<![CDATA[*/
                 var rspPlace = /*[[${place}]]*/ 'default';
                 var resultList = /*[[${searchList}]]*/ 'default';
+                var crossSectionArea = /*[[${csaList}]]*/ 'defalut';
                 /*]]>*/
-                console.log(rspPlace," ",resultList)
+
+
 
                 document.getElementById('h3title').innerHTML = " "+rspPlace + " 검색 결과 ";
                 document.getElementById('h3title').innerHTML += resultList.length + " 건"
                         + " 검색되었습니다.";
 
             </script>
+            <div th:if="${searchList != null}">
             <table class="table table-sm table-borderless table-hover">
                 <tr>
                     <th scope="col">TID</th>
-                    <th scope="col">DIST</th>
-                    <th scope="col">DBH</th>
-                    <th scope="col">HEIGHT</th>
-                    <th scope="col">조사지</th>
+                    <th scope="col">표준지</th>
+                    <th scope="col">흉고직경</th>
+                    <th scope="col">흉고단면적</th>
                 </tr>
                 <tr th:each="streel : ${searchList}">
                     <td> <a th:href="@{'/webfist/map/'+${streel.tid}}" th:text="${streel.tid}"></a></td>
-                    <td th:text="${streel.dist}"></td>
-                    <td th:text="${streel.dbh}"></td>
-                    <td th:text="${streel.height}"></td>
                     <td th:text="${streel.investigationPlace}"></td>
+                    <td th:text="${streel.dbh}"></td>
+                    <td th:id="${streel.tid}"></td>
                 </tr>
             </table>
+                <script>
+                    for(key in crossSectionArea){
+                        let td = document.getElementById(key);
+                        td.innerText = crossSectionArea[key];
+                    }
+                </script>
+            <table>
+                <tr>
+                    <td width="200px"><h4><b>평균 흉고단면적</b></h4></td> <td th:text="${adbh}"><h5></h5></td></tr><tr>
+                    <td width="200px"><h4><b>Stem density</b></h4></td> <td th:text="${stemdensity}"><h5></h5></td>
+                </tr>
+            </table>
+            </div>
+
+
             <div id="map" style="width:800px;height:800px;"></div>
             <script>
                 // 지도 관련 자바스크립트

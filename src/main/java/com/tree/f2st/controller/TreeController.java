@@ -114,7 +114,10 @@ public class TreeController {
     // 조사지 검색 홈
     @RequestMapping(value = "/map/other/{value}")
     public String other(Model model, @PathVariable("value") String value){
-        model.addAttribute("treeList",treeService.findAll());
+        ArrayList<TreeEntity> treeEntityArrayList = (ArrayList<TreeEntity>) treeService.findAll();
+        model.addAttribute("treeList",treeEntityArrayList);
+
+
         model.addAttribute("pval", value);
         model.addAttribute("detail",null);
         return "index";
@@ -138,6 +141,29 @@ public class TreeController {
             System.out.println(te.toString());
         }
         System.out.println("========= search Success ============");
+        JSONObject jo = new JSONObject();
+        if(tel!=null){
+            double sum=0.0;
+
+            for(TreeEntity te : tel){
+                double r = Double.parseDouble(te.getDbh());
+                double crossSectionArea = ((r*r)*Math.PI)/40000;
+                sum+=crossSectionArea;
+                jo.put(te.getTid(),crossSectionArea);
+            }
+
+            double adbh = sum/tel.size();
+            double stemdensity = adbh/0.04;
+            System.out.println("기준 "+ " "+(1.1284 * Math.sqrt(adbh)));
+            model.addAttribute("adbh",String.format("%.4f",adbh));
+            model.addAttribute("stemdensity",String.format("%.4f",stemdensity));
+            model.addAttribute("csaList",jo);
+        }else{
+            model.addAttribute("adbh",null);
+            model.addAttribute("stemdensity",null);
+            model.addAttribute("csaList",null);
+        }
+
         return "index";
     }
 
