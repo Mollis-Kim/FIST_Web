@@ -24,10 +24,13 @@
                 /*<![CDATA[*/
                 var rspPlace = /*[[${place}]]*/ 'default';
                 var resultList = /*[[${searchList}]]*/ 'default';
-                var crossSectionArea = /*[[${csaList}]]*/ 'defalut';
+                var treeList = /*[[${treeList}]]*/ 'default';
+                var basalAreaList = /*[[${basalAreaList}]]*/ 'defalut';
+                var adbh = /*[[${adbh}]]*/ 'defalut';
+                var adbh_am = /*[[${adbh_am}]]*/ 'defalut';
                 /*]]>*/
 
-
+                console.log(basalAreaList)
 
                 document.getElementById('h3title').innerHTML = " "+rspPlace + " 검색 결과 ";
                 document.getElementById('h3title').innerHTML += resultList.length + " 건"
@@ -45,22 +48,30 @@
                 <tr th:each="streel : ${searchList}">
                     <td> <a th:href="@{'/webfist/map/'+${streel.tid}}" th:text="${streel.tid}"></a></td>
                     <td th:text="${streel.investigationPlace}"></td>
-                    <td th:text="${streel.dbh}"></td>
+                    <td class="dbh" th:text="${streel.dbh}"></td>
                     <td th:id="${streel.tid}"></td>
                 </tr>
             </table>
                 <script>
-                    for(key in crossSectionArea){
+
+                    for(key in basalAreaList){
                         let td = document.getElementById(key);
-                        td.innerText = crossSectionArea[key];
+                        td.innerText = basalAreaList[key];
                     }
                 </script>
             <table>
                 <tr>
-                    <td width="200px"><h4><b>평균 흉고단면적</b></h4></td> <td th:text="${adbh}"><h5></h5></td></tr><tr>
-                    <td width="200px"><h4><b>Stem density</b></h4></td> <td th:text="${stemdensity}"><h5></h5></td>
+                    <td width="200px"><h4><b>평균 흉고단면적</b></h4></td> <td th:text="${aBA}"><h5></h5></td></tr><tr>
+                </tr>
+                <tr>
+                    <td width="200px"><h4><b>1ha 당 흉고단면적</b></h4></td> <td th:text="${baPer1Ha}"><h5></h5></td>
+                </tr>
+                <tr>
+                    <td  width="200px"><h4><b>평균 흉고직경<br>(흉고단면적법)</b></h4></td> <td th:text="${adbh}" ><h5></h5></td>
+                    <td width="200px"><h4><b>평균 흉고직경<br>(산술평균법)</b></h4></td> <td th:text="${adbh_am}" ><h5></h5></td>
                 </tr>
             </table>
+
             </div>
 
 
@@ -68,8 +79,14 @@
             <script>
                 // 지도 관련 자바스크립트
                 let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+
+                let pos = new Array(resultList[resultList.length - 1].latitude, resultList[resultList.length - 1].longitude)
+                let posLatLng = new kakao.maps.LatLng(pos[0],pos[1]);
+                if(resultList[resultList.length-1].location!=null) {
+                    pos = resultList[resultList.length - 1].location.split(",")
+                }
                 let options = { //지도를 생성할 때 필요한 기본 옵션
-                    center: new kakao.maps.LatLng(resultList[resultList.length-1].latitude, resultList[resultList.length-1].longitude), //지도의 중심좌표.
+                    center: new kakao.maps.LatLng(pos[0], pos[1]), //지도의 중심좌표.
                     level: 3 //지도의 레벨(확대, 축소 정도)
                 };
                 let map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
@@ -78,23 +95,67 @@
                 var imageSrc = "/icon/treeicon.png";
 
 
-
-
-                for (var i = 0; i < resultList.length; i ++) {
+                let maxdist=0
+                var pos2=null;
+                for (var i = 0; i < treeList.length; i ++) {
                     // 마커 이미지의 이미지 크기 입니다
 
                     var imageSize = new kakao.maps.Size(24, 35);
                     // 마커 이미지를 생성합니다
-                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                    var markerImage = new kakao.maps.MarkerImage("/icon/treeicon.png", imageSize);
+
+                    for(var j=0; j<resultList.length;j++){
+                        if(treeList[i].tid == resultList[j].tid) {
+                            if(Math.round(resultList[j].dbh) == Math.round(adbh) ||Math.round(resultList[j].dbh) == Math.round(adbh_am))
+                                markerImage = new kakao.maps.MarkerImage("/icon/treeiconred.png", imageSize);
+                            else
+                                markerImage = new kakao.maps.MarkerImage("/icon/treeiconblue.png", imageSize);
+
+                            l1 = new kakao.maps.LatLng(pos[0], pos[1])
+                            pos2 = new Array(resultList[j].latitude, resultList[j].longitude);
+                            l2 = new kakao.maps.LatLng(pos2[0], pos2[1])
+
+
+                            line =  new kakao.maps.Polyline({
+                                map: map,
+                                path:[l1,l2]
+                            })
+
+                            var distance = Math.round(line.getLength());
+                            if (line) {
+                                line.setMap(null);
+                                line = null;
+                            }
+                            if(distance>maxdist)
+                            {
+                                maxdist=distance;
+                            }
+                        }
+                    }
+
+
                     // 마커를 생성합니다
                     var marker = new kakao.maps.Marker({
                         map: map, // 마커를 표시할 지도
-                        position: new kakao.maps.LatLng(resultList[i].latitude, resultList[i].longitude), // 마커를 표시할 위치
-                        title : resultList[i].tid, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                        position: new kakao.maps.LatLng(treeList[i].latitude, treeList[i].longitude), // 마커를 표시할 위치
+                        title : treeList[i].tid, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
                         image : markerImage // 마커 이미지
                     });
+                    //console.log(marker.getPosition())
                 }
 
+                console.log(maxdist)
+                var circle = new kakao.maps.Circle({
+                    center : new kakao.maps.LatLng(pos[0], pos[1]),  // 원의 중심좌표 입니다
+                    radius: maxdist, // 미터 단위의 원의 반지름입니다
+                    strokeWeight: 5, // 선의 두께입니다
+                    strokeColor: '#75B8FA', // 선의 색깔입니다
+                    strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                    strokeStyle: 'dashed', // 선의 스타일 입니다
+                    fillColor: '#CFE7FF', // 채우기 색깔입니다
+                    fillOpacity: 0.5  // 채우기 불투명도 입니다
+                });
+                circle.setMap(map);
             </script>
         </div>
     </div>

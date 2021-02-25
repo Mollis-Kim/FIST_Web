@@ -141,23 +141,40 @@ public class TreeController {
             System.out.println(te.toString());
         }
         System.out.println("========= search Success ============");
-        JSONObject jo = new JSONObject();
+        JSONObject basalAreaList = new JSONObject();
         if(tel!=null){
             double sum=0.0;
+            double sum2=0.0;
 
             for(TreeEntity te : tel){
-                double r = Double.parseDouble(te.getDbh());
-                double crossSectionArea = ((r*r)*Math.PI)/40000;
-                sum+=crossSectionArea;
-                jo.put(te.getTid(),crossSectionArea);
+                double dbh = Double.parseDouble(te.getDbh());
+                double basalArea = ((dbh*dbh)*Math.PI)/40000;
+
+                sum+=basalArea;  //흉고 단면적합
+                sum2+=dbh;   //흉고직경 합
+
+                String tmp = te.getDbh();
+                Double dn = Math.round(Double.parseDouble(tmp)*10)/10.0;
+                tmp = String.format("%.1f",dn);
+                te.setDbh(tmp);
+
+
+                basalAreaList.put(te.getTid(),basalArea);
             }
 
-            double adbh = sum/tel.size();
-            double stemdensity = adbh/0.04;
-            System.out.println("기준 "+ " "+(1.1284 * Math.sqrt(adbh)));
-            model.addAttribute("adbh",String.format("%.4f",adbh));
-            model.addAttribute("stemdensity",String.format("%.4f",stemdensity));
-            model.addAttribute("csaList",jo);
+            double baPer1Ha = sum/0.04;  // 1헥타르당 흉고단면적
+            double aBA = sum/tel.size();  //평균 흉고단면적
+            double adbh = 1.1284 * Math.sqrt(aBA)*100.0; //흉고단면적법 -> 평균흉고직경
+            double adbh_am =sum2/ tel.size(); //산술평균 -> 평균 흉고직경
+
+
+            model.addAttribute("aBA",String.format("%.4f",aBA));
+            model.addAttribute("baPer1Ha",String.format("%.4f",baPer1Ha));
+            model.addAttribute("adbh",String.format("%.1f",adbh));
+            model.addAttribute("adbh_am",String.format("%.1f",adbh_am));
+
+            model.addAttribute("basalAreaList",basalAreaList);
+            System.out.println(1.1284 * Math.sqrt(aBA) );
         }else{
             model.addAttribute("adbh",null);
             model.addAttribute("stemdensity",null);
@@ -172,8 +189,10 @@ public class TreeController {
     public void uploadMulti(@RequestBody ArrayList<MultipartFile> files, HttpServletRequest request
             , HttpServletResponse response) throws Exception {
 
-        String basePath = request.getServletContext().getRealPath("")+"tree_original_image";
+        Path path = Path.of("C:\\webapp\\tree_original_image");
+
         // 파일 업로드(여러개) 처리 부분
+
         System.out.println("받기성공"+files.size());
 
         for (MultipartFile file : files) {
@@ -183,7 +202,7 @@ public class TreeController {
 
             if(treeService.isExist(id)) {
                 System.out.println(originalName);
-                String filePath = basePath + "/" + originalName;
+                String filePath = path + "/" + originalName;
                 File dest = new File(filePath);
                 file.transferTo(dest);
 

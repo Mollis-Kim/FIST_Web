@@ -42,12 +42,6 @@
                     <li>
                         <a th:href="@{'/webfist/map/other/'+${'1'}}">Search Place</a>
                     </li>
-                    <!--                    <li>-->
-                    <!--                        <a href="#">Page 2</a>-->
-                    <!--                    </li>-->
-                    <!--                    <li>-->
-                    <!--                        <a href="#">Page 3</a>-->
-                    <!--                    </li>-->
                 </ul>
             </li>
         </ul>
@@ -78,7 +72,7 @@
         <div th:if="${detail != null}" th:include="detail.html :: detailfrag(${detail})"></div>
         <div th:if="${detail == null}">
             <div th:if ="${pval != null}">
-                <div th:if="${#strings.equals(pval,'1')}" th:include="/searchPlace.html :: search-Place-frag(${treeList})"></div>
+                <div th:if="${#strings.equals(pval,'1')}" th:include="searchPlace.html :: search-Place-frag(${treeList})"></div>
             </div>
             <div th:if="${pval==null}">
                 <table class="table table-sm table-borderless table-hover">
