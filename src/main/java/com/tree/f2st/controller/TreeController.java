@@ -133,7 +133,6 @@ public class TreeController {
         System.out.println("========= search ....... ============");
 
 
-
         List<TreeEntity> tel = treeService.findByInvestigationPlace(key);
         model.addAttribute("searchList",tel);
 
