@@ -122,7 +122,7 @@ public class AnalysisService {
 
 
 
-    public boolean analyze(String tid, String method, HttpServletRequest request) throws IOException {
+    public boolean analyze(String tid, String method, double dbh, HttpServletRequest request) throws IOException {
         // 오리지널이미지파일 받아서 파이썬 실행 분석 후
         // 분석 이미지를 포함한 결과값 DB저장
 
@@ -145,6 +145,7 @@ public class AnalysisService {
         UriComponents builder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("filePath", decodeFilepath)
                 .queryParam("method", method)
+                .queryParam("dbh",dbh)
                 .build(false);    //자동으로 encode해주는 것을 막기 위해 false
 
         Object response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<String>(headers), String.class);

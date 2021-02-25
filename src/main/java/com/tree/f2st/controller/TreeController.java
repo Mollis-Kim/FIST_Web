@@ -167,10 +167,10 @@ public class TreeController {
             double adbh_am =sum2/ tel.size(); //산술평균 -> 평균 흉고직경
 
 
-            model.addAttribute("aBA",String.format("%.4f",aBA));
-            model.addAttribute("baPer1Ha",String.format("%.4f",baPer1Ha));
-            model.addAttribute("adbh",String.format("%.1f",adbh));
-            model.addAttribute("adbh_am",String.format("%.1f",adbh_am));
+            model.addAttribute("aBA",String.format("%.4f ㎡",aBA));
+            model.addAttribute("baPer1Ha",String.format("%.4f ㎡/ha",baPer1Ha));
+            model.addAttribute("adbh",String.format("%.1f㎝",adbh));
+            model.addAttribute("adbh_am",String.format("%.1f㎝",adbh_am));
 
             model.addAttribute("basalAreaList",basalAreaList);
             System.out.println(1.1284 * Math.sqrt(aBA) );
@@ -239,9 +239,28 @@ public class TreeController {
             ObjectMapper objectMapper = new ObjectMapper();
             TreeDTO treeDTO = objectMapper.readValue(jo.toJSONString(), TreeDTO.class);
 
+            String tmp = treeDTO.getInvestigationPlace();
+            tmp = removeBlank(tmp);
+            treeDTO.setInvestigationPlace(tmp);
+
+            tmp = treeDTO.getLocation();
+            tmp = removeBlank(tmp);
+            treeDTO.setLocation(tmp);
+
+            tmp = treeDTO.getPid();
+            tmp = removeBlank(tmp);
+            treeDTO.setPid(tmp);
+
             //treeDTO.show();
             treeService.save(treeDTO);
         }
+    }
+
+
+    private String removeBlank(String s){
+        String result = s.trim();
+        result = result.replace(" ","");
+        return result;
     }
 
     /*

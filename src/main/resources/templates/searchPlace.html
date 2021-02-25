@@ -68,7 +68,7 @@
                 </tr></thead>
                 <tbod>
                 <tr th:each="streel : ${searchList}">
-                    <td> <a th:href="@{'/webfist/map/'+${streel.tid}}" th:text="${streel.tid}"></a></td>
+                    <td> <a th:href="@{'/webfist/map/'+${streel.tid}}" th:text="${streel.tid}" class="tid"></a></td>
                     <td th:text="${streel.investigationPlace}"></td>
                     <td class="dbh" th:text="${streel.dbh}"></td>
                     <td th:id="${streel.tid}"></td>
@@ -122,12 +122,12 @@
 
                     $pagingLink.filter(":first").addClass("active");
 
-
-
-
+                    //흉고단면적
                     for(key in basalAreaList){
                         let td = document.getElementById(key);
-                        td.innerText = basalAreaList[key];
+                        num = parseFloat(basalAreaList[key]);
+                        num = Math.round(num*10000)/10000
+                        td.innerText = num.toString();
                     }
                 </script>
                 <br><br>
@@ -166,6 +166,8 @@
                 // 마커를 생성합니다
                 var imageSrc = "/icon/treeicon.png";
 
+                adbh = adbh.slice(0,-1);
+                adbh_am = adbh_am.slice(0,-1)
 
                 let maxdist=0
                 var pos2=null;
@@ -177,11 +179,32 @@
                     var markerImage = new kakao.maps.MarkerImage("/icon/treeicon.png", imageSize);
 
                     for(var j=0; j<resultList.length;j++){
+                        //treeList는  전체 나무,  resultList는 검색된 조사지의 나무들
                         if(treeList[i].tid == resultList[j].tid) {
-                            if(Math.round(resultList[j].dbh) == Math.round(adbh) ||Math.round(resultList[j].dbh) == Math.round(adbh_am))
+
+                            // adbh 또는 adbh_am의 정수부분이 동일할 시..
+                            if(Math.round(resultList[j].dbh) == Math.round(adbh)) {
+
+                                //흉고단면적기준
                                 markerImage = new kakao.maps.MarkerImage("/icon/treeiconred.png", imageSize);
-                            else
+                                let id = document.getElementsByClassName("tid");
+                                for(var k=0;k<id.length; k++){
+                                    if(id[k].innerText == resultList[j].tid){
+                                        id[k].innerText +="*"
+                                    }
+                                }
+                            }else if(Math.round(resultList[j].dbh) == Math.round(adbh_am)) {
+
+                                //산술기준
                                 markerImage = new kakao.maps.MarkerImage("/icon/treeiconblue.png", imageSize);
+                                let id = document.getElementsByClassName("tid");
+                                for(var k=0;k<id.length; k++){
+                                    if(id[k].innerText == resultList[j].tid){
+                                        id[k].innerText +="**"
+                                    }
+                                }
+                            }
+
 
                             l1 = new kakao.maps.LatLng(pos[0], pos[1])
                             pos2 = new Array(resultList[j].latitude, resultList[j].longitude);

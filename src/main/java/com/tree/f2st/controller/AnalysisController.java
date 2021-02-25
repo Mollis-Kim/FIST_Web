@@ -2,7 +2,9 @@ package com.tree.f2st.controller;
 
 import com.tree.f2st.dto.AnalysisDTO;
 import com.tree.f2st.dto.TreeDTO;
+import com.tree.f2st.entity.TreeEntity;
 import com.tree.f2st.service.AnalysisService;
+import com.tree.f2st.service.TreeService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,7 +26,8 @@ public class AnalysisController {
     @Autowired
     AnalysisService analysisService;
 
-
+    @Autowired
+    TreeService treeService;
 
     @GetMapping("")
     public String analysisHome(Model model) throws IOException {
@@ -60,7 +63,9 @@ public class AnalysisController {
         model.addAttribute("treeList", analysisService.getTreeList());
         model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter")));
 
-        boolean bool = analysisService.analyze(tid,method, request);
+        List<TreeEntity> tes = treeService.findByTid(tid);
+        double dbh = Double.parseDouble(tes.get(0).getDbh());
+        boolean bool = analysisService.analyze(tid,method, dbh, request);
         //return "redirect:analysis/get?tid="+tid;
         model.addAttribute("completeMsg","display:block;");
         model.addAttribute("sidebar_treeList", analysisService.getAnalyzedTreeList());
