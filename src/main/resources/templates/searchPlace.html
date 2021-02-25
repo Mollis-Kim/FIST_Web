@@ -108,12 +108,6 @@
                         $pagingLink.removeClass("active");
                         $this.addClass("active");
 
-                        // 0 => 0(0*4), 4(0*4+4)
-                        // 1 => 4(1*4), 8(1*4+4)
-                        // 2 => 8(2*4), 12(2*4+4)
-                        // 시작 행 = 페이지 번호 * 페이지당 행수
-                        // 끝 행 = 시작 행 + 페이지당 행수
-
                         var currPage = $this.attr("rel");
                         var startItem = currPage * rowPerPage;
                         var endItem = startItem + rowPerPage;
