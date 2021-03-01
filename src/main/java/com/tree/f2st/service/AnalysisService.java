@@ -69,6 +69,18 @@ public class AnalysisService {
 
         return names;
     }
+
+    public List<AnalysisDTO> findAll(){
+        List<AnalysisDTO> analysisDTOS = new ArrayList<>();
+        List<AnalysisEntity> analysisEntityList = analysisRepository.findAll();
+        for(AnalysisEntity analysisEntity : analysisEntityList){
+            AnalysisDTO analysisDTO = new AnalysisDTO();
+            analysisDTO.of(analysisEntity);
+            analysisDTOS.add(analysisDTO);
+        }
+        return analysisDTOS;
+    }
+
     public List<AnalysisDTO> findByTid(String tid){
 
         TreeDTO treeDTO = new TreeDTO(tid);
@@ -156,48 +168,6 @@ public class AnalysisService {
             System.out.println("전송성공");
             return true;
         }
-
-/*
-        ClassPathResource resource = new ClassPathResource("python_module/main.py");
-        String pythonPath = resource.getURL().getPath();
-        pythonPath = pythonPath.substring(1);
-        Path p = Path.of(pythonPath);
-        pythonPath = p.toString();
- */
-
-        /*
-        String pythonPath = request.getServletContext().getRealPath("python_module")+"\\main.py";
-
-        String[] command = new String[6];
-        command[0] = "python";
-        command[1] = pythonPath;
-        command[2] = "-f";
-        command[3] = filePath;
-        command[4] = "-m";
-        command[5] = method;
-
-        try {
-            long beforeTime = System.currentTimeMillis();
-            CommandLine commandLine = CommandLine.parse(command[0]);
-            for (int i = 1, n = command.length; i < n; i++) {
-                commandLine.addArgument(command[i]);
-                System.out.println("par"+i+" "+command[i]);
-            }
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream);
-            DefaultExecutor executor = new DefaultExecutor();
-            executor.setStreamHandler(pumpStreamHandler);
-            pumpStreamHandler.setProcessOutputStream(executor.);
-
-            int result = executor.execute(commandLine);
-            System.out.println("result: " + result);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-         */
        return false;
     }
 

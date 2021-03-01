@@ -7,7 +7,28 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Web Home</title>
-
+    <style>
+        .off-screen {
+            display: none;
+        }
+        #nav {
+            width: 100%;
+            text-align: center;
+        }
+        #nav a {
+            display: inline-block;
+            padding: 3px 5px;
+            margin-right: 10px;
+            font-family: Tahoma;
+            background: #ccc;
+            color: #000;
+            text-decoration: none;
+        }
+        #nav a.active {
+            background: #333;
+            color: #fff;
+        }
+    </style>
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <!-- Our Custom CSS -->
@@ -75,27 +96,94 @@
                 <div th:if="${#strings.equals(pval,'1')}" th:include="searchPlace.html :: search-Place-frag(${treeList})"></div>
             </div>
             <div th:if="${pval==null}">
-                <table class="table table-sm table-borderless table-hover">
-                    <tr>
+                <table class="table table-sm table-borderless table-hover" id="table">
+                    <thead><tr>
                         <th scope="col">tid</th>
-                        <th scope="col">dist</th>
                         <th scope="col">dbh</th>
                         <th scope="col">height</th>
-                    </tr>
+
+                    </thead></tr>
+                    <tbdoy>
                     <tr th:each="treel : ${treeList}">
                         <td> <a th:href="@{'/webfist/map/'+${treel.tid}}" th:text="${treel.tid}"></a></td>
-                        <td th:text="${treel.dist}"></td>
                         <td th:text="${treel.dbh}"></td>
                         <td th:text="${treel.height}"></td>
                         <script>
                             name = "[[${treel.tid}]]";
                             l1 = parseFloat("[[${treel.latitude}]]");
                             l2 = parseFloat("[[${treel.longitude}]]");
-                            console.log("좌표확인:",l1,l2);
                             treePosArray.push([name,l1,l2]);
                         </script>
                     </tr>
+                    </tbdoy>
                 </table>
+                <script>
+                    var rowPerPage = 5;
+                    var nav = null;
+                    if(document.getElementById("nav")!==null){
+                        var nav = document.getElementById("nav");
+                        nav.parentNode.removeChild(nav)
+                        nav = null;
+                    }
+                    nav = document.createElement("div")
+                    nav.setAttribute("id","nav")
+                    var table = document.getElementById("table")
+                    table.appendChild(nav);
+
+                    var tr = table.querySelectorAll("tbody tr");
+                    var rowTotals = tr.length;
+
+                    var pageTotal = Math.ceil(rowTotals / rowPerPage);
+                    var i = 0;
+
+                    for (; i < pageTotal; i++) {
+                        var a = document.createElement("a")
+                        a.setAttribute("href", "#");
+                        a.setAttribute('rel', i);
+                        a.innerHTML = i + 1
+                        nav.appendChild(a);
+                    }
+
+                    for (i = 0; i < tr.length; i++) {
+                        tr[i].classList.add("off-screen");
+                    }
+
+                    var trArr = Array.prototype.slice.call(tr);
+
+                    for (i = 0; i < rowPerPage; i++) {
+                        tr[i].classList.remove("off-screen");
+                    }
+
+                    var pagingLink = Array.prototype.slice.call(nav.querySelectorAll("a"))
+
+
+                    for (i = 0; i < pagingLink.length; i++) {
+                        pagingLink[i].addEventListener("click", (e) => {
+                            e.preventDefault();
+                            var target = e.target;
+                            if (target.classList.contains("active")) return;
+
+
+                            for (j = 0; j < pagingLink.length; j++) {
+                                if (pagingLink[j].classList.contains("active"))
+                                    pagingLink[j].classList.remove("active");
+                            }
+
+                            target.classList.add("active");
+                            var currPage = target.rel;
+                            var startItem = currPage * rowPerPage;
+                            var endItem = startItem + rowPerPage;
+                            for (i = 0; i < tr.length; i++) {
+                                //tr[i].style.opacity = "0.0";
+                                tr[i].classList.add("off-screen");
+                                if (i >= startItem && i < endItem)
+                                    tr[i].classList.remove("off-screen");
+                            }
+                            ;
+                        });
+                    }
+                </script>
+
                 <div id="map" style="width:800px;height:800px;"></div>
                 <script>
                     // 지도 관련 자바스크립트

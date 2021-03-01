@@ -154,7 +154,16 @@ public class AnalysisController {
                 .deduction(jo.get("deduction").toString())
                 .analyzedImgPath(total_jo.get("imgName").toString())
                 .build();
-        analysisService.save(analysisDTO);
+
+        String tid = analysisDTO.getTid();
+        String method = analysisDTO.getMethod();
+        if(analysisService.findByTidAndMethod(tid, method)==null){
+            analysisService.save(analysisDTO);
+        }else{
+            analysisService.deleteByTidAndMethod(tid, method);
+            analysisService.save(analysisDTO);
+        }
+
     }
 
     @ResponseBody

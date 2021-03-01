@@ -3,8 +3,10 @@ package com.tree.f2st.controller;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.source.tree.Tree;
+import com.tree.f2st.dto.AnalysisDTO;
 import com.tree.f2st.dto.TreeDTO;
 import com.tree.f2st.entity.TreeEntity;
+import com.tree.f2st.service.AnalysisService;
 import com.tree.f2st.service.TreeService;
 import com.tree.f2st.util.ExcelUtil;
 import org.apache.commons.compress.utils.IOUtils;
@@ -42,9 +44,15 @@ public class TreeController {
     @Autowired
     TreeService treeService;
 
+    @Autowired
+    AnalysisService analysisService;
+
+
+
     @RequestMapping(value = "/map")
     public String home(Model model){
-        model.addAttribute("treeList",treeService.findAll());
+        List<TreeEntity> treeEntities = treeService.findAll();
+        model.addAttribute("treeList",treeEntities);
         return "index";
     }
 
@@ -130,18 +138,14 @@ public class TreeController {
         model.addAttribute("detail",null);
         model.addAttribute("pval", value);
         model.addAttribute("place",key);
-        System.out.println("========= search ....... ============");
 
 
         List<TreeEntity> tel = treeService.findByInvestigationPlace(key);
-        model.addAttribute("searchList",tel);
 
-        for(TreeEntity te : tel){
-            System.out.println(te.toString());
-        }
-        System.out.println("========= search Success ============");
+
         JSONObject basalAreaList = new JSONObject();
         if(tel!=null){
+
             double sum=0.0;
             double sum2=0.0;
 
@@ -159,7 +163,15 @@ public class TreeController {
 
 
                 basalAreaList.put(te.getTid(),basalArea);
+
+
+                String sHeight = te.getHeight();
+                double dHeight = Double.parseDouble(sHeight);
+                dHeight = Math.round(dHeight*10)/10.0;
+                te.setHeight(String.format("%.1f",dHeight));
+
             }
+            model.addAttribute("searchList",tel);
 
             double baPer1Ha = sum/0.04;  // 1헥타르당 흉고단면적
             double aBA = sum/tel.size();  //평균 흉고단면적
@@ -173,11 +185,18 @@ public class TreeController {
             model.addAttribute("adbh_am",String.format("%.1f㎝",adbh_am));
 
             model.addAttribute("basalAreaList",basalAreaList);
-            System.out.println(1.1284 * Math.sqrt(aBA) );
+
+            List<AnalysisDTO> analysisDTOS = analysisService.findAll();
+
+            model.addAttribute("volumes",analysisDTOS);
+
         }else{
+            model.addAttribute("searchList",null);
             model.addAttribute("adbh",null);
             model.addAttribute("stemdensity",null);
             model.addAttribute("csaList",null);
+            model.addAttribute("volumes",null);
+
         }
 
         return "index";
@@ -250,6 +269,11 @@ public class TreeController {
             tmp = treeDTO.getPid();
             tmp = removeBlank(tmp);
             treeDTO.setPid(tmp);
+
+            double dbh = Math.round(Double.parseDouble(treeDTO.getDbh())*10)/10.0;
+            double height = Math.round(Double.parseDouble(treeDTO.getHeight())*10)/10.0;
+            treeDTO.setDbh(String.format("%.1f",dbh));
+            treeDTO.setHeight(String.format("%.1f",height));
 
             //treeDTO.show();
             treeService.save(treeDTO);
