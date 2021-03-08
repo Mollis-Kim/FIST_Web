@@ -38,8 +38,8 @@ public class AnalysisService {
     @Autowired
     AnalysisRepository analysisRepository;
 
-    @Autowired
-    TreeService treeService;
+
+    TreeRepository treeRepository;
 
 
 
@@ -52,7 +52,7 @@ public class AnalysisService {
     }
 
     public  List<TreeEntity> getTreeList(){
-        return treeService.findAll();
+        return treeRepository.findAll();
     }
     public  List<String> getAnalyzedTreeList(){
         // 각 tid당 method방식별로 나옴
@@ -140,7 +140,7 @@ public class AnalysisService {
 
         System.out.println("서비스 분석 메소드 호출!!");
         TreeDTO treeDTO = new TreeDTO();
-        treeDTO.of(treeService.findByTid(tid).get(0));
+        treeDTO.of(treeRepository.findByTid(tid).get(0));
         String filePath = treeDTO.getImgPath();
 
         String url = "http://localhost:8081";

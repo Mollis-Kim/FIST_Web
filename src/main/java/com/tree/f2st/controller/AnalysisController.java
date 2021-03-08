@@ -26,7 +26,6 @@ public class AnalysisController {
     @Autowired
     AnalysisService analysisService;
 
-    @Autowired
     TreeService treeService;
 
     @GetMapping("")

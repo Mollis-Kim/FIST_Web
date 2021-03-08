@@ -375,7 +375,17 @@
                     fillColor: '#f7fcf5', // 채우기 색깔입니다
                     fillOpacity: 0.5  // 채우기 불투명도 입니다
                 });
+                var center = new kakao.maps.Circle({
+                    center : new kakao.maps.LatLng(pos[0], pos[1]),  // 원의 중심좌표 입니다
+                    radius: 0.5, // 미터 단위의 원의 반지름입니다
+                    strokeWeight: 2, // 선의 두께입니다
+                    strokeColor: '#1d5503', // 선의 색깔입니다
+                    strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                    fillColor: '#0c2401', // 채우기 색깔입니다
+                    fillOpacity: 1  // 채우기 불투명도 입니다
+                });
                 circle.setMap(map);
+                center.setMap(map);
             </script>
         </div>
     </div>
