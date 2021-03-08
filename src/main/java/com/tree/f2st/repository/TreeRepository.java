@@ -30,4 +30,7 @@ public interface TreeRepository extends JpaRepository<TreeEntity, String> {
     @Query(value= "select * from tree t where t.investigation_place = ?1", nativeQuery = true)
     public List<TreeEntity> findByInvestigationPlace(String investigationPlace);
 
+
+    @Query(value ="select t.investigationPlace from TreeEntity T", nativeQuery = true)
+    public List<String> getInvestigationPlace();
 }

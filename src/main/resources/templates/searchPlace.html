@@ -79,6 +79,10 @@
                     <th scope="col">이용재적(Misp)</th>
                     <th scope="col">이용재적(Scrib)</th>
                     <th scope="col">이용재적(Inter)</th>
+                    <th scope="col">좌표</th>
+                    <th scope="col">연령(n)</th>
+                    <th scope="col">MAI(cm)</th>
+                    <th scope="col">CAI(cm)</th>
                 </tr></thead>
                 <tbod>
                 <tr th:each="streel : ${searchList}">
@@ -92,6 +96,10 @@
                     <td th:id="'misp_'+${streel.tid}"></td>
                     <td th:id="'scrib_'+${streel.tid}"></td>
                     <td th:id="'inter_'+${streel.tid}"></td>
+                    <td style="font-size: small" th:id="${streel.tid}+'_pos'"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 </tbod>
             </table>
@@ -101,6 +109,10 @@
                     let heightSum=0.0;
                     for(i=0; i<resultList.length;i++){
                         heightSum+=parseFloat(resultList[i].height);
+                    }
+
+                    for(i=0; i<resultList.length;i++){
+                        document.getElementById(resultList[i].tid+"_pos").innerText=resultList[i].latitude+", "+resultList[i].longitude
                     }
 
 
@@ -196,12 +208,15 @@
                     <td width="200px" class="header"><h5><b>1ha 당 흉고단면적</b></h5></td> <td th:text="${baPer1Ha}"></td>
 
                     <td width="200px" class="header" rowspan="2"><h5><b>평균 수고(m)</b></h5></td>
+                    <td width="200px" class="header" rowspan="2"><h5><b>임령</b></h5></td>
                 </tr>
                 <tr style="border: 2px solid black"><td></td><td></td><td></td><td></td></tr>
                 <tr>
-                    <td  width="200px" class="header"><h5><b>평균 흉고직경<br>(흉고단면적법)</b></h5></td> <td th:text="${adbh}" ><h5></h5></td>
-                    <td width="200px" class="header"><h5><b>평균 흉고직경<br>(산술평균법)</b></h5></td> <td th:text="${adbh_am}" ><h5></h5></td>
+                    <td  width="200px" class="header"><h5><b>평균 흉고직경<br>(흉고단면적법)</b></h5></td> <td style="color: red" th:text="${adbh}" ><h5></h5></td>
+                    <td width="200px" class="header"><h5><b>평균 흉고직경<br>(산술평균법)</b></h5></td> <td style="color: blue" th:text="${adbh_am}"><h5></h5></td>
                      <td id="sumOfHeight" rowspan="2"><h5></h5></td>
+                    <td width="200px"  rowspan="2"><h5><input type="text" size="5">&nbsp<button>입력</button></h5></td>
+
                 </tr>
                 <tr style="border: 2px solid black"><td></td><td></td><td></td><td></td></tr>
                 <tr>
@@ -210,6 +225,7 @@
                     <td class="header"><h5><b>총 이용재적(Misp)</b></h5></td>
                     <td class="header"><h5><b>총 이용재적(Scrib)</b></h5></td>
                     <td class="header"><h5><b>총 이용재적(Inter)</b></h5></td>
+                    <td width="200px" class="header"><h5><b>CAI(cm)</b></h5></td>
                 </tr>
                 <tr>
                     <td id="total_doyle"></td>
@@ -217,6 +233,7 @@
                     <td id="total_misp"></td>
                     <td id="total_scrib"></td>
                     <td id="total_inter"></td>
+                    <td width="200px"  rowspan="2"><h5><input type="text" size="5">&nbsp<button>입력</button></h5></td>
                     <SCRIPT>
                         document.getElementById("sumOfHeight").innerText = Math.round(heightSum/resultList.length*10)/10;
                         console.log(sum["doyle"]);
@@ -234,6 +251,7 @@
                     <td class="header"><h5><b>1ha당 이용재적(Misp)</b></h5></td>
                     <td class="header"><h5><b>1ha당 이용재적(Scrib)</b></h5></td>
                     <td class="header"><h5><b>1ha당 이용재적(Inter)</b></h5></td>
+                    <td width="200px" class="header"><h5><b>MAI(cm)</b></h5></td>
                 </tr>
                 <tr>
                     <td id="total_doyle_per1ha"></td>
@@ -241,6 +259,7 @@
                     <td id="total_misp_per1ha"></td>
                     <td id="total_scrib_per1ha"></td>
                     <td id="total_inter_per1ha"></td>
+                    <td width="200px"  rowspan="1"><h5><input type="text" size="5">&nbsp<button>입력</button></h5></td>
                     <SCRIPT>
                         document.getElementById("total_doyle_per1ha").innerText=(sum["doyle"]/0.04)+"㎥/ha";
                         document.getElementById("total_hanna_per1ha").innerText=(sum["hanna"]/0.04)+"㎥/ha";
