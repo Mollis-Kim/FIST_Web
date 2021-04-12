@@ -147,7 +147,7 @@
                             </tr>
                             <tr>
                                 <td><b>총 공제량</b></td>
-                                <td th:text="${data.deduction}">테스</td>
+                                <td th:text="${data.deduction}+' n/pixel'"></td>
                             </tr>
                             <tr>
                                 <td><b>분석 방식</b></td>
@@ -167,7 +167,7 @@
                             strarr.reverse();
                             let suffix = ""
                             switch (i){
-                                case 0: suffix="n/pixel";break;
+                                case 0: suffix="㎥";break;
                                 case 1: suffix="cm"; break;
                                 case 2: suffix="cm"; break;
                                 case 3:break;
