@@ -14,6 +14,7 @@ import java.util.List;
 public class ExcelUtil {
 
     public static ByteArrayInputStream jsonArrayToExcelFile(JSONArray jsonArray){
+
         try(Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Fist-db");
             Row row = sheet.createRow(0);
@@ -81,14 +82,44 @@ public class ExcelUtil {
             cell.setCellValue("이용재적(scrib)");
             cell.setCellStyle(headerCellStyle);
 
+
             cell = row.createCell(15);
+            cell.setCellValue("이용재적(말구직경)");
+            cell.setCellStyle(headerCellStyle);
+
+            cell = row.createCell(16);
             cell.setCellValue("이용재적(inter)");
             cell.setCellStyle(headerCellStyle);
 
+            cell = row.createCell(17);
+            cell.setCellValue("프레슬러(생장률%)");
+            cell.setCellStyle(headerCellStyle);
+
+            cell = row.createCell(18);
+            cell.setCellValue("프레슬러(ha 당 생장량㎥)");
+            cell.setCellStyle(headerCellStyle);
+
+            cell = row.createCell(19);
+            cell.setCellValue("슈나이더(생장량%)");
+            cell.setCellStyle(headerCellStyle);
+
+            cell = row.createCell(20);
+            cell.setCellValue("슈나이더(ha 당 생장량㎥)");
+            cell.setCellStyle(headerCellStyle);
+
             // Creating data rows for each customer
+
+
+
             for(int i = 0; i < jsonArray.size(); i++) {
+
                 Row dataRow = sheet.createRow(i + 1);
                 JSONObject jo = (JSONObject) jsonArray.get(i);
+                jo.keySet().forEach(key -> {
+                    if(jo.get(key)==null){
+                        jo.put(key,"");
+                    }
+                });
 
                 dataRow.createCell(0).setCellValue(jo.get("tid").toString());
                 dataRow.createCell(1).setCellValue(jo.get("dist").toString());
@@ -105,7 +136,13 @@ public class ExcelUtil {
                 dataRow.createCell(12).setCellValue(jo.get("hanna").toString());
                 dataRow.createCell(13).setCellValue(jo.get("misp").toString());
                 dataRow.createCell(14).setCellValue(jo.get("scrib").toString());
-                dataRow.createCell(15).setCellValue(jo.get("inter").toString());
+                dataRow.createCell(15).setCellValue(jo.get("EDSM").toString());
+                dataRow.createCell(16).setCellValue(jo.get("inter").toString());
+                dataRow.createCell(17).setCellValue(jo.get("프레슬러_생장률").toString());
+                dataRow.createCell(18).setCellValue(jo.get("프레슬러_ha당생장량").toString());
+                dataRow.createCell(19).setCellValue(jo.get("슈나이더_생장률").toString());
+                dataRow.createCell(20).setCellValue(jo.get("슈나이더_ha당생장량").toString());
+                
             }
 
             // Making size of column auto resize to fit with data
@@ -125,6 +162,11 @@ public class ExcelUtil {
             sheet.autoSizeColumn(13);
             sheet.autoSizeColumn(14);
             sheet.autoSizeColumn(15);
+            sheet.autoSizeColumn(16);
+            sheet.autoSizeColumn(17);
+            sheet.autoSizeColumn(18);
+            sheet.autoSizeColumn(19);
+            sheet.autoSizeColumn(20);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);

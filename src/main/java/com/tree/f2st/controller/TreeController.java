@@ -118,6 +118,22 @@ public class TreeController {
         return new ResponseEntity<List<TreeEntity>>(tree, HttpStatus.OK);
     }
 
+    //나무 개별 화면에서 추가정보 입력
+    @PostMapping(value = "/addition")
+    public  @ResponseBody void addition(@RequestParam(name="tid") String tid, @RequestParam(name="year") String year, @RequestParam(name="mai") String mai, @RequestParam(name="cai") String cai){
+        //System.out.println(tid+" "+year+" "+mai+" "+cai);
+        treeService.updateAddition(tid,year,mai,cai);
+    }
+
+    // 조사지 화면에서 추가정보 입력
+    @PostMapping(value = "/placeAddition")
+    public  @ResponseBody void addition(@RequestParam(name="place") String place, @RequestParam(name="yearOfForest") String year,
+                                        @RequestParam(name="pressler1") String pressler1, @RequestParam(name="pressler2") String pressler2,
+                                        @RequestParam(name="schneider1") String schneider1, @RequestParam(name="schneider2") String schneider2){
+        //System.out.println(place+" "+year+" "+pressler1+" "+schneider1);
+        treeService.updatePlaceAddition(place, year, pressler1, pressler2, schneider1, schneider2);
+    }
+
 
     // 조사지 검색 홈
     @RequestMapping(value = "/map/other/{value}")
@@ -130,6 +146,8 @@ public class TreeController {
         model.addAttribute("detail",null);
         return "index";
     }
+
+
     //조사지 검색 홈+결과
     @RequestMapping(value = "/map/other/{value}/{key}")
     public String other(Model model, @PathVariable("value") String value,@PathVariable("key") String key){

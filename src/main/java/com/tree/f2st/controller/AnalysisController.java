@@ -26,6 +26,7 @@ public class AnalysisController {
     @Autowired
     AnalysisService analysisService;
 
+    @Autowired
     TreeService treeService;
 
     @GetMapping("")
@@ -47,7 +48,7 @@ public class AnalysisController {
             model.addAttribute("sidebar_treeList", null);
         }
         model.addAttribute("treeList", analysisService.getTreeList());
-        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter")));
+        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "말구직경자승법", "inter")));
         model.addAttribute("formdivstyle","display:Block;");
         return "analysisHome";
     }
@@ -60,10 +61,11 @@ public class AnalysisController {
 
 
         model.addAttribute("treeList", analysisService.getTreeList());
-        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter")));
+        model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "말구직경자승법", "inter")));
 
-        //List<TreeEntity> tes = treeService.findByTid(tid);
-        double dbh = Double.parseDouble("23.7");
+
+        List<TreeEntity> tes = treeService.findByTid(tid);
+        double dbh = Double.parseDouble(tes.get(0).getDbh());
         boolean bool = analysisService.analyze(tid,method, dbh, request);
         //return "redirect:analysis/get?tid="+tid;
         model.addAttribute("completeMsg","display:block;");

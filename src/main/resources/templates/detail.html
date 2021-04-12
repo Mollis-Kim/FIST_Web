@@ -45,12 +45,31 @@
                                     <tr>
                                         <td><b>조사자</b></td> <td th:text="${tree.pid}"></td>
                                     </tr>
-                                </table></td>
+
+
+
+                                </table>
+                                        <table>
+                                        <tr>
+                                            <td>연령(n)</td><td> <input type="text" id="year" size="5"></td>
+                                        </tr>
+                                            <tr>
+                                                <td>MAI</td> <td> <input type="text" id="mai" size="5"></td>
+                                            </tr>
+                                            <tr>
+                                            <td>CAI</td> <td> <input type="text" id="cai" size="5"></td>
+                                        </tr>
+                                            <tr>
+                                                <td colspan="2"><button onclick="sendAdditionalInfo()">전송</button></td>
+                                            </tr>
+                                        </table>
+
+                                </td>
                                 <td rowspan="2">
                                     <div id = "img" style="display: inline-block;  width:400px;height:800px; border: 3px solid #000000" >
                                     <script>
                                         imgsrc=null;
-                                        console.log(tree.tid,"입니다");
+                                        //console.log(tree.tid,"입니다");
                                     </script>
                                     <script src="/js/getImg.js"></script>
 
@@ -64,9 +83,27 @@
                             </tr>
                         </table>
 
+
                     </th:inline>
 
         <script>
+            function sendAdditionalInfo() {
+                var year = document.getElementById("year").value;
+                var mai = document.getElementById("mai").value;
+                var cai = document.getElementById("cai").value;
+
+
+                $.ajax({
+                    url: "/webfist/addition",
+                    data: {tid: tree.tid, year: year, mai:mai, cai:cai},
+                    method: "POST",
+                    dataType: "json",
+                })
+                alert("전송하였습니다.");
+            }
+
+
+
             getImage(tree.tid);
             let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
             l1 = parseFloat(tree.latitude);
@@ -87,7 +124,6 @@
                 title : tree.tid, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
                 image : markerImage // 마커 이미지
             });
-
 
         </script>
             </tr>

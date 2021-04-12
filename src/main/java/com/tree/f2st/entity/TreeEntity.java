@@ -46,10 +46,31 @@ public class TreeEntity {
     private String location; //표준지 좌표
 
 
+    @Column(name="year")
+    private String year; //연령
+    @Column(name="mai")
+    private String mai; //cai
+    @Column(name="cai")
+    private String cai; // cai
+
+
+    @Column(name="yearOfForest")
+    private String yearOfForest;
+    @Column(name="presslerRatio")
+    private String presslerRatio;
+    @Column(name="presslerAmount")
+    private String presslerAmount;
+    @Column(name="schneiderRatio")
+    private String schneiderRatio;
+    @Column(name="schneiderAmount")
+    private String schneiderAmount;
+
+
     @Builder
     public TreeEntity(
             String tid, String dist, String dbh, String height, String azimuth,
-            String latitude,String longitude, String pid,String imgPath, String investigationPlace, String location){
+            String latitude,String longitude, String pid,String imgPath, String investigationPlace, String location,
+            String year, String mai, String cai){
         this.tid = tid;
         this.dist = dist;
         this.dbh = dbh;
@@ -61,6 +82,9 @@ public class TreeEntity {
         this.imgPath=imgPath;
         this.investigationPlace=investigationPlace;
         this.location=location;
+        this.year=year;
+        this.mai=mai;
+        this.cai=cai;
     }
 
 }

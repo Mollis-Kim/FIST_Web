@@ -86,7 +86,6 @@ public class AnalysisService {
         TreeDTO treeDTO = new TreeDTO(tid);
         TreeEntity te = treeDTO.toEntity();
 
-        
         ArrayList<AnalysisEntity> t = (ArrayList<AnalysisEntity>) analysisRepository.findByTreeEntity(te);
         if(t!=null) {
             List<AnalysisDTO> analysisDTOS = new ArrayList<>();
@@ -147,6 +146,8 @@ public class AnalysisService {
         String url = "http://localhost:8081";
         String serviceKey = "fromSpring";
         String decodeFilepath = URLDecoder.decode(filePath, "UTF-8");
+
+        if(method.equals("말구직경자승법")) method="EDSM";
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();

@@ -13,6 +13,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
@@ -49,6 +50,19 @@ public class TreeService {
         return (t.size()>0)? true: false;
     }
 
+    public boolean updateAddition(String tid, String year,String mai, String cai){
+
+        treeRepository.updateAdditionalInfo(tid,year,mai,cai);
+
+        return true;
+    }
+    public boolean updatePlaceAddition(String place, String year,String pressler1,String pressler2,
+                                       String schneider1, String schneider2){
+
+        treeRepository.updatePlaceAdditionalInfo(place,year,pressler1, pressler2, schneider1, schneider2);
+
+        return true;
+    }
     public  List<TreeEntity> findByTid(String tid){
         List<TreeEntity> t = new ArrayList<>();
         treeRepository.findByTid(tid).forEach(e->t.add(e));
@@ -89,33 +103,37 @@ public class TreeService {
             data.put("height",tree.getHeight());
             data.put("latitude",tree.getLatitude());
             data.put("longitude",tree.getLongitude());
-            data.put("ageoftree","");
-            data.put("ageofstand","");
-            data.put("CAI","");
-            data.put("MAI","");
+            data.put("ageoftree",tree.getYear());
+            data.put("ageofstand",tree.getYearOfForest());
+            data.put("CAI",tree.getCai());
+            data.put("MAI",tree.getMai());
+
+
             double dbh = Double.parseDouble(tree.getDbh());
             double basalArea = ((dbh*dbh)*Math.PI)/40000;
             data.put("basalarea",String.format("%.4f",basalArea));
-
+            data.put("프레슬러_생장률",tree.getPresslerRatio());
+            data.put("프레슬러_ha당생장량",tree.getPresslerAmount());
+            data.put("슈나이더_생장률",tree.getSchneiderRatio());
+            data.put("슈나이더_ha당생장량",tree.getSchneiderAmount());
             List<AnalysisEntity> aTrees = analysisRepository.findByTreeEntity(tree);
 
-            String[] methods = {"doyle", "hanna", "misp", "scrib", "inter"};
+            String[] methods = {"doyle", "hanna", "misp", "scrib","EDSM", "inter"};
 
 
             if(aTrees.size()>0) {
                 for(AnalysisEntity analysisEntity : aTrees) {
                     if(analysisEntity.getTreeEntity().getTid().equals(tree.getTid())) {
-                        for (int i = 0; i < 5; i++) {
+                        for (int i = 0; i < 6; i++) {
                             if (analysisEntity.getMethod().equals(methods[i])) {
                                 data.put(methods[i], analysisEntity.getTotalVolume());
-
                             }
                         }
                     }
                 }
             }
 
-            for(int i=0; i<5;i++){
+            for(int i=0; i<6;i++){
                 if(data.get(methods[i])==null){
                     data.put(methods[i],"");
                 }

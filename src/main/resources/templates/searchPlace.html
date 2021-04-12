@@ -78,6 +78,7 @@
                     <th scope="col">이용재적(Hanna)</th>
                     <th scope="col">이용재적(Misp)</th>
                     <th scope="col">이용재적(Scrib)</th>
+                    <th scope="col">이용재적<br>(말구직경)</th>
                     <th scope="col">이용재적(Inter)</th>
                     <th scope="col">좌표</th>
                     <th scope="col">연령(n)</th>
@@ -95,11 +96,12 @@
                     <td th:id="'hanna_'+${streel.tid}"></td>
                     <td th:id="'misp_'+${streel.tid}"></td>
                     <td th:id="'scrib_'+${streel.tid}"></td>
+                    <td th:id="'EDSM_'+${streel.tid}"></td>
                     <td th:id="'inter_'+${streel.tid}"></td>
                     <td style="font-size: small" th:id="${streel.tid}+'_pos'"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td th:text="${streel.year}"></td>
+                    <td th:text="${streel.mai}"></td>
+                    <td th:text="${streel.cai}"></td>
                 </tr>
                 </tbod>
             </table>
@@ -116,11 +118,12 @@
                     }
 
 
-                    let sum = {"doyle":0, "hanna":0, "misp":0, "scrib":0, "inter":0}
-                    let cnt = {"doyle":0, "hanna":0, "misp":0, "scrib":0, "inter":0}
+                    let sum = {"doyle":0, "hanna":0, "misp":0, "scrib":0,"EDSM":0, "inter":0}
+                    let cnt = {"doyle":0, "hanna":0, "misp":0, "scrib":0,"EDSM":0, "inter":0}
                     for(i=0; i<volumes.length; i++){
                         var id = volumes[i].method+"_"+volumes[i].tid;
                         var td = document.getElementById(id);
+
                         td.innerText = volumes[i].totalVolume;
                         sum[volumes[i].method]+=parseFloat(volumes[i].totalVolume);
                         cnt[volumes[i].method]+=1;
@@ -204,36 +207,33 @@
             <table border="1px solid black">
                 <tr>
                     <td width="200px" class="header"><h5><b>평균 흉고단면적</b></h5></td> <td th:text="${aBA}"></td>
-
                     <td width="200px" class="header"><h5><b>1ha 당 흉고단면적</b></h5></td> <td th:text="${baPer1Ha}"></td>
-
                     <td width="200px" class="header" rowspan="2"><h5><b>평균 수고(m)</b></h5></td>
-                    <td width="200px" class="header" rowspan="2"><h5><b>임령</b></h5></td>
                 </tr>
                 <tr style="border: 2px solid black"><td></td><td></td><td></td><td></td></tr>
                 <tr>
                     <td  width="200px" class="header"><h5><b>평균 흉고직경<br>(흉고단면적법)</b></h5></td> <td style="color: red" th:text="${adbh}" ><h5></h5></td>
                     <td width="200px" class="header"><h5><b>평균 흉고직경<br>(산술평균법)</b></h5></td> <td style="color: blue" th:text="${adbh_am}"><h5></h5></td>
                      <td id="sumOfHeight" rowspan="2"><h5></h5></td>
-                    <td width="200px"  rowspan="2"><h5><input type="text" size="5">&nbsp<button>입력</button></h5></td>
 
                 </tr>
                 <tr style="border: 2px solid black"><td></td><td></td><td></td><td></td></tr>
                 <tr>
-                    <td class="header"><h5><b>총 이용재적(Doyle)</b></h5></td>
-                    <td class="header"><h5><b>총 이용재적(Hanna)</b></h5></td>
-                    <td class="header"><h5><b>총 이용재적(Misp)</b></h5></td>
-                    <td class="header"><h5><b>총 이용재적(Scrib)</b></h5></td>
-                    <td class="header"><h5><b>총 이용재적(Inter)</b></h5></td>
-                    <td width="200px" class="header"><h5><b>CAI(cm)</b></h5></td>
+                    <td class="header"><h4><b>총 이용재적(Doyle)</b></h4></td>
+                    <td class="header"><h4><b>총 이용재적(Hanna)</b></h4></td>
+                    <td class="header"><h4><b>총 이용재적(Misp)</b></h4></td>
+                    <td class="header"><h4><b>총 이용재적(Scrib)</b></h4></td>
+                    <td class="header"><h4><b>총 이용재적(말구직경)</b></h4></td>
+                    <td class="header"><h4><b>총 이용재적(Inter)</b></h4></td>
                 </tr>
                 <tr>
                     <td id="total_doyle"></td>
                     <td id="total_hanna"></td>
                     <td id="total_misp"></td>
                     <td id="total_scrib"></td>
+                    <td id="total_EDSM"></td>
                     <td id="total_inter"></td>
-                    <td width="200px"  rowspan="2"><h5><input type="text" size="5">&nbsp<button>입력</button></h5></td>
+
                     <SCRIPT>
                         document.getElementById("sumOfHeight").innerText = Math.round(heightSum/resultList.length*10)/10;
                         console.log(sum["doyle"]);
@@ -241,39 +241,123 @@
                         document.getElementById("total_hanna").innerText=sum["hanna"]+"㎥";
                         document.getElementById("total_misp").innerText=sum["misp"]+"㎥";
                         document.getElementById("total_scrib").innerText=sum["scrib"]+"㎥";
+                        document.getElementById("total_EDSM").innerText=sum["EDSM"]+"㎥";
                         document.getElementById("total_inter").innerText=sum["inter"]+"㎥";
                     </SCRIPT>
                 </tr>
-                <tr style="border: 2px solid black"><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr style="border: 2px solid black"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                 <tr>
-                    <td class="header"><h5><b>1ha당 이용재적(Doyle)</b></h5></td>
-                    <td class="header"><h5><b>1ha당 이용재적(Hanna)</b></h5></td>
-                    <td class="header"><h5><b>1ha당 이용재적(Misp)</b></h5></td>
-                    <td class="header"><h5><b>1ha당 이용재적(Scrib)</b></h5></td>
-                    <td class="header"><h5><b>1ha당 이용재적(Inter)</b></h5></td>
-                    <td width="200px" class="header"><h5><b>MAI(cm)</b></h5></td>
+                    <td class="header"><h4><b>1ha당 이용재적(Doyle)</b></h4></td>
+                    <td class="header"><h4><b>1ha당 이용재적(Hanna)</b></h4></td>
+                    <td class="header"><h4><b>1ha당 이용재적(Misp)</b></h4></td>
+                    <td class="header"><h4><b>1ha당 이용재적(Scrib)</b></h4></td>
+                    <td class="header"><h4><b>1ha당 이용재적(말구직경)</b></h4></td>
+                    <td class="header"><h4><b>1ha당 이용재적(Inter)</b></h4></td>
                 </tr>
                 <tr>
                     <td id="total_doyle_per1ha"></td>
                     <td id="total_hanna_per1ha"></td>
                     <td id="total_misp_per1ha"></td>
-                    <td id="total_scrib_per1ha"></td>
+                    <td id="total_scrib_per1ha">
+                    <td id="total_EDSM_per1ha"></td>
                     <td id="total_inter_per1ha"></td>
-                    <td width="200px"  rowspan="1"><h5><input type="text" size="5">&nbsp<button>입력</button></h5></td>
                     <SCRIPT>
-                        document.getElementById("total_doyle_per1ha").innerText=(sum["doyle"]/0.04)+"㎥/ha";
-                        document.getElementById("total_hanna_per1ha").innerText=(sum["hanna"]/0.04)+"㎥/ha";
-                        document.getElementById("total_misp_per1ha").innerText=(sum["misp"]/0.04)+"㎥/ha";
-                        document.getElementById("total_scrib_per1ha").innerText=(sum["scrib"]/0.04)+"㎥/ha";
-                        document.getElementById("total_inter_per1ha").innerText=(sum["inter"]/0.04)+"㎥/ha";
+                        document.getElementById("total_doyle_per1ha").innerText=Math.round((sum["doyle"]/0.04)*10000)/10000+"㎥/ha";
+                        document.getElementById("total_hanna_per1ha").innerText=Math.round((sum["hanna"]/0.04)*10000)/10000+"㎥/ha";
+                        document.getElementById("total_misp_per1ha").innerText=Math.round((sum["misp"]/0.04)*10000)/10000+"㎥/ha";
+                        document.getElementById("total_scrib_per1ha").innerText=Math.round((sum["scrib"]/0.04)*10000)/10000+"㎥/ha";
+                        document.getElementById("total_EDSM_per1ha").innerText=Math.round((sum["EDSM"]/0.04)*10000)/10000+"㎥/ha";
+                        document.getElementById("total_inter_per1ha").innerText=Math.round((sum["inter"]/0.04)*10000)/10000+"㎥/ha";
                     </SCRIPT>
                 </tr>
+                <tr style="border: 2px solid black"><td></td><td></td><td></td><td></td></tr>
+                <tr>
+                    <td class="header"><h5><b>우세목 수고</b></h5></td>
+                    <td class="header"><h5><b>줄기 밀도</b></h5></td>
+                    <td class="header"><h5><b>임분밀도지수<br>(산술평균)</b></h5></td>
+                    <td class="header"><h5><b>임분밀도지수<br>(흉고단면적)</b></h5></td>
+                </tr>
+                <tr>
+                    <td id = "superiorStand"></td>
+                    <td id = "densityOfTrunk"></td>
+                    <td id = "sdi1"></td>
+                    <td id = "sdi2"></td>
+                    <SCRIPT>
+                        function comp(a,b){
+                            if(a.height>b.height) return -1;
+                            else return 1
+                        }
+                        tmpTList = resultList;
+                        tmpTList.sort(comp);
+                        let sumOftop5 =0;
+                        for(let i=0; i<5; i++){
+                            sumOftop5+=parseFloat(tmpTList[i].height);
+                        }
+
+
+                        document.getElementById("superiorStand").innerText= sumOftop5/5+"m";
+                        let tpa =resultList.length/0.04
+                        document.getElementById("densityOfTrunk").innerText = tpa + "tree/ha";
+                        document.getElementById("sdi1").innerText= Math.round((tpa * Math.pow((parseFloat(adbh_am)*0.393701/10),1.605))*10000)/10000;
+                        document.getElementById("sdi2").innerText= Math.round((tpa * Math.pow((parseFloat(adbh)*0.393701/10),1.605))*10000)/10000;
+                    </SCRIPT>
+                </tr>
+
+                <br><br><br><br>
             </table>
+                <table border="1px solid black">
+                    <tr>
+                        <td class="header"><h5><b>임령</b></h5></td>
+                        <td class="header" colspan="2"><h5><b>프레슬러</b></h5></td>
+                        <td class="header" colspan="2"><h5><b>슈나이더</b></h5></td>
+                        <td rowspan="2"><input type="button" value="전송" onclick="sendPlaceAddtion()" ></td>
+                    </tr>
+                    <tr>
+                        <td ><input type="text" id="yearOfForest"></td>
+                        <td >
+                            <h6>생장률(%)</h6>
+                            <input type="text" size="5" id="pressler1"></td>
+                        <td >
+                            <h6>ha 당 생장량(㎥)</h6>
+                            <input type="text" size="5" id="pressler2"></td>
+                        <td >
+                            <h6>생장률(%)</h6>
+                            <input type="text" size="5" id="schneider1"></td>
+                        <td >
+                            <h6>ha 당 생장량(㎥)</h6>
+                            <input type="text" size="5"  id="schneider2"></td>
+                    </tr>
+                    <script>
+                        document.getElementById("yearOfForest").value = resultList[0].yearOfForest;
+                        document.getElementById("pressler1").value = resultList[0].presslerRatio;
+                        document.getElementById("pressler2").value = resultList[0].presslerAmount;
+                        document.getElementById("schneider1").value = resultList[0].schneiderRatio;
+                        document.getElementById("schneider2").value = resultList[0].schneiderAmount;
+                    </script>
+                </table>
             </div>
+            <script>
+                function sendPlaceAddtion(){
+                    let year = document.getElementById("yearOfForest").value;
+                    let pressler1 = document.getElementById("pressler1").value;
+                    let pressler2 = document.getElementById("pressler2").value;
+                    let schneider1 = document.getElementById("schneider1").value;
+                    let schneider2 = document.getElementById("schneider2").value;
+                    $.ajax({
+                        url: "/webfist/placeAddition",
+                        data: {place: rspPlace, yearOfForest: year, pressler1:pressler1, pressler2:pressler2, schneider1:schneider1, schneider2:schneider2},
+                        method: "POST",
+                        dataType: "json",
+                    })
+                    alert("전송하였습니다.");
 
+                }
+            </script>
 
+            <br><br><br>
             <div id="map" style="width:800px;height:800px;"></div>
             <script>
+
                 // 지도 관련 자바스크립트
                 let container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
 
@@ -364,7 +448,6 @@
                     //console.log(marker.getPosition())
                 }
 
-                console.log(maxdist)
                 var circle = new kakao.maps.Circle({
                     center : new kakao.maps.LatLng(pos[0], pos[1]),  // 원의 중심좌표 입니다
                     radius: maxdist, // 미터 단위의 원의 반지름입니다
