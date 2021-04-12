@@ -86,6 +86,7 @@ public class AnalysisService {
         TreeDTO treeDTO = new TreeDTO(tid);
         TreeEntity te = treeDTO.toEntity();
 
+        
         ArrayList<AnalysisEntity> t = (ArrayList<AnalysisEntity>) analysisRepository.findByTreeEntity(te);
         if(t!=null) {
             List<AnalysisDTO> analysisDTOS = new ArrayList<>();

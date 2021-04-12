@@ -62,8 +62,8 @@ public class AnalysisController {
         model.addAttribute("treeList", analysisService.getTreeList());
         model.addAttribute("methodList", new ArrayList<String>(Arrays.asList("doyle", "hanna", "misp", "scrib", "inter")));
 
-        List<TreeEntity> tes = treeService.findByTid(tid);
-        double dbh = Double.parseDouble(tes.get(0).getDbh());
+        //List<TreeEntity> tes = treeService.findByTid(tid);
+        double dbh = Double.parseDouble("23.7");
         boolean bool = analysisService.analyze(tid,method, dbh, request);
         //return "redirect:analysis/get?tid="+tid;
         model.addAttribute("completeMsg","display:block;");
